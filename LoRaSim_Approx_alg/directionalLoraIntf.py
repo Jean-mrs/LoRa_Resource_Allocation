@@ -65,6 +65,7 @@ import math
 import sys
 import matplotlib.pyplot as plt
 import os
+import pandas as pd
 from matplotlib.patches import Rectangle
 
 # turn on/off graphics
@@ -74,7 +75,7 @@ graphics = 0
 full_collision = True
 
 
-# CF values
+# CF values (MODIFICADO)
 CF1 = 868100000
 CF2 = 868300000
 CF3 = 868500000
@@ -104,17 +105,46 @@ dir_180 = -3
 
 
 # this is an array with measured values for sensitivity
-# see paper, Table 3 u = u + T_SF[cf_sf['sf']] * L
-sf7 = np.array([7,-126.5,-124.25,-120.75])
-sf8 = np.array([8,-127.25,-126.75,-124.0])
+# see paper, Table 3
+# u = u + T_SF[cf_sf['sf']] * L
+sf7 = np.array([7, -126.5, -124.25, -120.75])
+sf8 = np.array([8, -127.25, -126.75, -124.0])
 sf9 = np.array([9,-131.25,-128.25,-127.5])
 sf10 = np.array([10,-132.75,-130.25,-128.75])
 sf11 = np.array([11,-134.5,-132.75,-128.75])
 sf12 = np.array([12,-133.25,-132.25,-132.25])
 
+def a(data):
+    for y, row in enumerate(data):
+        if y == 0:
+            for x, val in enumerate(row):
+                    if val / 0.000057 <= nrNodes/48:
+                        return x, y
+                    else:
+                        continue
+        if y == 1:
+            for x, val in enumerate(row):
+                    if val / 0.000103 <= nrNodes/48:
+                        return x, y
+                    else:
+                        continue
+        if y == 2:
+            for x, val in enumerate(row):
+                    if val / 0.000185 <= nrNodes/48:
+                        return x, y
+        if y == 3:
+            for x, val in enumerate(row):
+                    if val / 0.000371 <= nrNodes/48:
+                        return x, y
+        if y == 4:
+            for x, val in enumerate(row):
+                    if val / 0.000741 <= nrNodes/48:
+                        return x, y
+        if y == 5:
+            for x, val in enumerate(row):
+                    if val / 0.001319 <= nrNodes/48:
+                        return x, y
 
-
-#
 # check for collisions at base station
 # Note: called before a packet (or rather node) is inserted into the list
 def checkcollision(packet):
@@ -126,7 +156,8 @@ def checkcollision(packet):
         for other in packetsAtBS[packet.bs]:
             if other.id != packet.nodeid:
                # simple collision
-               if frequencyCollision(packet, other.packet[packet.bs]) and sfCollision(packet, other.packet[packet.bs]):
+               if frequencyCollision(packet, other.packet[packet.bs]) \
+                   and sfCollision(packet, other.packet[packet.bs]):
                    if full_collision:
                        if timingCollision(packet, other.packet[packet.bs]):
                            # check who collides in the power domain
@@ -136,7 +167,7 @@ def checkcollision(packet):
                            for p in c:
                                p.collided = 1
                                if p == packet:
-                                    col = 1
+                                   col = 1
                        else:
                            # no timing collision, all fine
                            pass
@@ -202,7 +233,8 @@ def timingCollision(p1, p2):
 
 # this function computes the airtime of a packet
 # according to LoraDesignGuide_STD.pdf
-#
+
+
 def airtime(sf,cr,pl,bw):
     H = 0        # implicit header disabled (H=0) or not (H=1)
     DE = 0       # low data rate optimization enabled (=1) or not (=0)
@@ -217,9 +249,11 @@ def airtime(sf,cr,pl,bw):
 
     Tsym = (2.0**sf)/bw
     Tpream = (Npream + 4.25)*Tsym
+
     #print ("sf", sf, " cr", cr, "pl", pl, "bw", bw)
     payloadSymbNB = 8 + max(math.ceil((8.0*pl-4.0*sf+28+16-20*H)/(4.0*(sf-2*DE)))*(cr+4),0)
     Tpayload = payloadSymbNB * Tsym
+    print("sf: ",sf, "TIME ",Tpream + Tpayload)
     return Tpream + Tpayload
 
 # this function creates a BS
@@ -504,72 +538,81 @@ class myPacket():
         # new: base station ID
         self.bs = bs
         self.nodeid = nodeid
-
         self.sf = random.randint(7,12)
-        self.freq = random.choice([CF1,CF2, CF3, CF4, CF5, CF6, CF7, CF8])
-        print("Randon self.freq: ",self.freq)
         self.cr = 1
         self.bw = 125
 
-        if experiment == 4: 
-          
+        # Chanels Configuration
+        self.freq = random.choice([CF1, CF2, CF3, CF4, CF5, CF6, CF7, CF8])
+        print("Randon self.freq: ",self.freq)
 
-            minX,minY = np.unravel_index(np.argmin(m_uti),m_uti.shape)
+        if experiment == 4:
+            #print('argmin: ', np.argmin(m_uti))
+            #print(m_uti.flatten())
+            #print(np.argmin(m_uti))
+            minX, minY = a(m_uti) #np.unravel_index(np.argmin(m_uti), m_uti.shape)
+            print('o MinX sera:', minX)
+            print('o MinY sera:', minY)
 
-            if (minX == 0):
+            if minX == 0:
                 self.sf = 7
 
-            elif (minX == 1):
+            elif minX == 1:
                 self.sf = 8
 
-            elif (minX == 2):
+            elif minX == 2:
                 self.sf = 9
 
-            elif (minX == 3):
+            elif minX == 3:
                 self.sf = 10
 
-            elif (minX == 4):
+            elif minX == 4:
                 self.sf = 11
 
-            elif (minX == 5):
+            elif minX == 5:
                 self.sf = 12
 
-            if (minY == 0):
+            if minY == 0:
                 self.freq = CF1
 
-            elif (minY == 1):
+            elif minY == 1:
                 self.freq = CF2
 
-            elif (minY == 2):
+            elif minY == 2:
                 self.freq = CF3
 
-            elif (minY == 3):
+            elif minY == 3:
                 self.freq = CF4
 
-            elif (minY == 4):
+            elif minY == 4:
                 self.freq = CF5
 
-            elif (minY == 5):
+            elif minY == 5:
                 self.freq = CF6
 
-            elif (minY == 6):
+            elif minY == 6:
                 self.freq = CF7
 
-            elif (minY == 7):
+            elif minY == 7:
                 self.freq = CF8
 
+            # Define Airtime
+            at = airtime(self.sf, self.cr, 20, self.bw)  # 20 bytes
+            #print('at: ', at)
+            at2 = at/avgSendTime  # no Lora-single-gw, at2 corresponde a: at0 * 1/L
+            #print("at2:", at2)
 
-            at = airtime(self.sf, self.cr, 20, self.bw) #20 bytes
-            at2 = at/avgSendTime #no Lora-single-gw, at2 corresponde a: at * 1/L
-            print("at2:", at2)
-
-            m_uti[minX,minY] = m_uti[minX,minY] + at2 
+            m_uti[minX, minY] = (m_uti[minX, minY] + at2)  # Matrix
+            #m_uti[minX, minY] = (((m_uti[minX, minY] + at2)/at) * 10)
+            Umatrix = pd.DataFrame(m_uti)
+            Umatrix.columns = ['CF1', 'CF2', 'CF3', 'CF4', 'CF5', 'CF6', 'CF7', 'CF8']
+            Umatrix.index = ['SF7', 'SF8', 'SF9', 'SF10', 'SF11', 'SF12']
+            print(Umatrix.T)
 
 
         # for experiment 3 find the best setting
-        # OBS, some hardcoded values    
+        # OBS, some hardcoded values
         Prx = Ptx  ## zero path loss by default
-        b
         # log-shadow
         Lpl = Lpld0 + 10*gamma*math.log10(distance/d0)
         #print (Lpl)
@@ -600,7 +643,7 @@ class myPacket():
             self.sf = minsf
             self.bw = minbw
             if (minairtime == 9999):
-                #print ("does not reach base station"            )
+                #print ("does not reach base station")
                 exit(-1)
 
             self.rectime = minairtime
@@ -716,9 +759,9 @@ def transmit(env,node):
 
 # get arguments
 if len(sys.argv) == 10:
-    nrNodes = int(sys.argv[1])                       
+    nrNodes = int(sys.argv[1])
     avgSendTime = int(sys.argv[2])
-    L = avgSendTime
+    L = avgSendTime  # Tempo de envio
     experiment = int(sys.argv[3])
     simtime = int(sys.argv[4])
     nrBS = int(sys.argv[5])
@@ -749,6 +792,7 @@ env = simpy.Environment()
 
 #cria matriz utilizacao
 m_uti = np.zeros((6,8), dtype=np.float64)
+m_aux = np.zeros((6,8), dtype=np.float64)
 
 
 
@@ -895,11 +939,40 @@ avgDER = (sumder)/nrBS
 #print ("(sumder)", (sumder))
 
 
-print m_uti
+# Umatrix = pd.DataFrame(m_uti)
+# m_aux = pd.DataFrame(m_aux)
+# # print(m_aux)
+# Umatrix.columns = ['CF1', 'CF2', 'CF3', 'CF4', 'CF5', 'CF6', 'CF7', 'CF8']
+# Umatrix.index = ['SF7', 'SF8', 'SF9', 'SF10', 'SF11', 'SF12']
+# for i in range(0, len(Umatrix.index)):
+#     for j in range(0, len(Umatrix.columns)):
+#         Umatrix.iat[i, j] = (Umatrix.iat[i, j]/m_aux.iat[i, j]) * 1000000
+#
+# print(Umatrix.T)
+
+
+
+# for i in range(0, len(Umatrix.index)):
+#     for j in range(0, len(Umatrix.columns)):
+#         Umatrix.iat[i, j]
+
+# for i in range(0, len(Umatrix.index)):
+#     for j in range(0, len(Umatrix.columns)):
+#         aux = (Umatrix.iat[i, j]/m_aux.iat[i, j]) * 1000000
+#         if aux > nodes_limit and j < len(Umatrix.columns) - 1:
+#             if (aux - nodes_limit)
+#         else:
+#             Umatrix.iat[i, j] = aux
+#
+# print(Umatrix.T)
+#
+#
+# divis
+#print(m_uti)
 
 # this can be done to keep graphics visible
-if (graphics == 1):
-    raw_input('Press Enter to continue ...')
+# if (graphics == 1):
+#     raw_input('Press Enter to continue ...')
 
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0
