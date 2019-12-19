@@ -529,7 +529,7 @@ class myPacket():
         # for certain experiments override these and
         # choose some random frequences
         if experiment == 1:
-            self.freq = random.choice([904100000, 904300000, 904500000])
+            self.freq = random.choice([904100000, 905100000, 904500000])
         else:
             self.freq = 903900000
             
@@ -717,7 +717,7 @@ nodes = []
 packetsAtBS = []
 env = simpy.Environment()
 
-data = pd.read_csv("3000nodes.csv")
+data = pd.read_csv("100nodes.csv")
 # max distance: 300m in city, 3000 m outside (5 km Utz experiment)
 # also more unit-disc like according to Utz
 nrCollisions = 0
