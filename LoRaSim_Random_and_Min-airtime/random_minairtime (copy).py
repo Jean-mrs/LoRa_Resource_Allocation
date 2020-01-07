@@ -59,8 +59,8 @@
 """
 
 import simpy
-import random
 import pandas as pd
+import random
 import numpy as np
 import math
 import sys
@@ -74,7 +74,7 @@ graphics = 0
 # do the full collision check
 full_collision = True
 
-# CF values (MODIFICADO)
+# CF values
 CF1 = 903900000
 CF2 = 904100000
 CF3 = 904300000
@@ -501,6 +501,7 @@ class myPacket():
         global Lpld0
         global GL
         global nodes
+        global data
         global minsensi
 
         # new: base station ID
@@ -508,22 +509,17 @@ class myPacket():
         self.nodeid = nodeid
 
 
-        # randomize configuration values
-        self.sf = random.randint(7,12)
-        self.cr = random.randint(1,4)
-        self.bw = random.choice([125, 250, 500])
-
         # for certain experiments override these    
-        if experiment==1 or experiment == 0:
-            self.sf = random.randint(6,12)
-            self.cr = 4
+        if experiment==1 or experiment == 0: #RANDOM
+            self.sf = random.randint(7,12)
+            self.cr = 1
             self.bw = 125
 
         # for certain experiments override these    
-        if experiment==2:
-            self.sf = 6
+        if experiment==2: # MIN-AIRTIME
+            self.sf = 7
             self.cr = 1
-            self.bw = 500
+            self.bw = 125
 
         if experiment==6: # HEURISTICA
             self.cr = 1
@@ -560,44 +556,22 @@ class myPacket():
             elif (self.nodeid >= int(nrNodes / 1.1428571429)) and (self.nodeid < nrNodes):
                 self.freq = CF8
 
-        # lorawan
-        if experiment == 4: 
+                # lorawan
+        if experiment == 4:
+            self.sf = 12
+            self.cr = 1
             self.bw = 125
-            self.cr = 4
-            if(self.nodeid>=0) and (self.nodeid < nrNodes/6):
-                self.sf= 7
-            elif(self.nodeid >= nrNodes/6) and (self.nodeid < nrNodes/3):
-                self.sf= 8
-            elif(self.nodeid >= nrNodes/3) and (self.nodeid < nrNodes/2):
-                self.sf= 9
-            elif(self.nodeid >= nrNodes/2) and (self.nodeid < int(nrNodes/1.5)):
-                self.sf= 10
-            elif(self.nodeid >= int(nrNodes/1.5)) and (self.nodeid < int(nrNodes/1.2)):
-                self.sf= 11
-            elif(self.nodeid >= int(nrNodes/1.2)) and (self.nodeid < nrNodes):
-                self.sf= 12
 
-            if(self.nodeid>=0) and (self.nodeid < nrNodes/8):
-                self.freq = CF1
-            elif(self.nodeid>= nrNodes/8) and (self.nodeid < nrNodes/4):
-                self.freq = CF2
-            elif(self.nodeid>= nrNodes/4) and (self.nodeid < int(nrNodes/2.66666666)):
-                self.freq = CF3
-            elif(self.nodeid>= int(nrNodes/2.666666)) and (self.nodeid < nrNodes/2):
-                self.freq = CF4
-            elif(self.nodeid>= nrNodes/2) and (self.nodeid < int(nrNodes/1.6)):
-                self.freq = CF5
-            elif(self.nodeid>= int(nrNodes/1.6)) and (self.nodeid < int(nrNodes/1.33333333)):
-                self.freq = CF6
-            elif(self.nodeid>= int(nrNodes/1.33333333)) and (self.nodeid < int(nrNodes/1.1428571429)):
-                self.freq = CF7
-            elif(self.nodeid>= int(nrNodes/1.1428571429)) and (self.nodeid < nrNodes):
-                self.freq = CF8            
+        # for certain experiments override these and
+        # choose some random frequences
+        if experiment == 1:
+            self.freq = random.choice([904100000, 905100000, 904500000])
+        elif experiment == 4 or experiment == 2 or experiment == 3 or experiment == 5:
+            self.freq = 903900000
             
         # for experiment 3 find the best setting
         # OBS, some hardcoded values    
         Prx = Ptx  ## zero path loss by default
-        #b
         # log-shadow
         #Lpl = Lpld0 + 10*gamma*math.log10(distance/d0)
         bsHeight = 7  # Base Station height in meters
@@ -656,6 +630,8 @@ class myPacket():
         self.arriveTime = 0
         self.rssi = Prx 
 
+
+
         self.rectime = airtime(self.sf,self.cr,self.pl,self.bw)
         # denote if packet is collided
         self.collided = 0
@@ -690,7 +666,7 @@ def transmit(env,node):
         global nrBS
         for bs in range(0, nrBS):
            if (node in packetsAtBS[bs]):
-                print ("ERROR: packet already in")
+                 print ("ERROR: packet already in")
            else:
                 # adding packet if no collision
                 if (checkcollision(node.packet[bs])==1):
@@ -777,8 +753,9 @@ nodes = []
 packetsAtBS = []
 env = simpy.Environment()
 
-data = pd.read_csv("100nodes.csv")
+m_uti = np.zeros((6,8), dtype=np.float64)
 
+data = pd.read_csv("100nodes.csv")
 # max distance: 300m in city, 3000 m outside (5 km Utz experiment)
 # also more unit-disc like according to Utz
 nrCollisions = 0
@@ -848,11 +825,11 @@ for i in range(0,nrBS):
 
 
 for i in range(0,nrNodes):
-    #    takes period (in ms), base station id packetlen (in Bytes)
+    # myNode takes period (in ms), base station id packetlen (in Bytes)
     # 1000000 = 16 min
     for j in range(0,nrBS):
         # create nrNodes for each base station
-        node = myNode(i*nrBS+j, avgSendTime, 20,  data.iat[i, 0], data.iat[i, 1], bs[j])
+        node = myNode(i*nrBS+j, avgSendTime,20,  data.iat[i, 0], data.iat[i, 1], bs[j])
         nodes.append(node)
         
         # when we add directionality, we update the RSSI here
@@ -899,11 +876,10 @@ for i in range(0,nrNodes*nrBS):
     sumSent = sumSent + nodes[i].sent
     # print "id for node ", nodes[i].id, "BS:", nodes[i].bs.id, " sent: ", nodes[i].sent
     sent[nodes[i].bs.id] = sent[nodes[i].bs.id] + nodes[i].sent
-# for i in range(0, nrBS):
-#     # print "send to BS[",i,"]:", sent[i]
+for i in range(0, nrBS):
+     print ("send to BS[",i,"]:", sent[i])
 
 # print "sumSent: ", sumSent
-
 
 der = []
 # data extraction rate
@@ -914,7 +890,7 @@ for i in range(0, nrBS):
     # print "DER BS[",i,"]:", der[i]
     sumder = sumder + der[i]
 avgDER = (sumder)/nrBS
-
+# print "avg DER: ", avgDER
 
 TX = [22, 22, 22, 23,                                      # RFO/PA0: -2..1
       24, 24, 24, 25, 25, 25, 25, 26, 31, 32, 34, 35, 44,  # PA_BOOST/PA1: 2..14
@@ -930,15 +906,16 @@ for i in range(0, nrNodes):
         rectim = rectim + nodes[i].packet[n].rectime
     rectim = rectim/len(nodes[i].packet)
     energy = (energy + rectim * mA * V * nodes[i].sent)/1000.0
+
 # this can be done to keep graphics visible
 # if (graphics == 1):
 #     raw_input('Press Enter to continue ...')
 
 # save experiment data into a dat file that can be read by e.g. gnuplot
-# name of file would be:  exp0.dat for experiment 0
-#fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "EqDistr.dat"
-fname = "exp" + str(experiment) + "_Heuristica_16min.dat"
-print (fname)
+# name of file would be:  exp0.dat for experiment 0/
+#fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "IntfAAAA.dat"
+fname = "exp" + str(experiment) + "_heuristica_16min.dat"
+print(fname)
 if os.path.isfile(fname):
     res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy)
 else:
