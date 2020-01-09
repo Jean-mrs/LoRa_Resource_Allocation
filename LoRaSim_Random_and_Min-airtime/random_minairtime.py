@@ -503,6 +503,12 @@ class myPacket():
         global nodes
         global data
         global minsensi
+        global sf7count
+        global sf8count
+        global sf9count
+        global sf10count
+        global sf11count
+        global sf12count
 
         # new: base station ID
         self.bs = bs
@@ -529,7 +535,7 @@ class myPacket():
         # for certain experiments override these and
         # choose some random frequences
         if experiment == 1:
-            self.freq = random.choice([904100000, 905100000, 904500000])
+            self.freq = random.choice([904900000, 905100000, 904100000])
         else:
             self.freq = 903900000
             
@@ -602,11 +608,22 @@ class myPacket():
         self.processed = 0
         # mark the packet as lost when it's rssi is below the sensitivity
         # don't do this for experiment 3, as it requires a bit more work
-        if experiment != 3:
-            #global minsensi
-            self.lost = self.rssi < minsensi
+        #global minsensi
+        self.lost = self.rssi < minsensi
             #print "node {} bs {} lost {}".format(self.nodeid, self.bs, self.lost)
 
+        if self.sf == 7:
+            sf7count += 1
+        if self.sf == 8:
+            sf8count += 1
+        if self.sf == 9:
+            sf9count += 1
+        if self.sf == 10:
+            sf10count += 1
+        if self.sf == 11:
+            sf11count += 1
+        if self.sf == 12:
+            sf12count += 1
 
 #
 # main discrete event loop, runs for each node
@@ -717,7 +734,7 @@ nodes = []
 packetsAtBS = []
 env = simpy.Environment()
 
-data = pd.read_csv("100nodes.csv")
+data = pd.read_csv("2000nodes.csv")
 # max distance: 300m in city, 3000 m outside (5 km Utz experiment)
 # also more unit-disc like according to Utz
 nrCollisions = 0
@@ -731,6 +748,13 @@ packetSeq = 0
 recPackets=[]
 collidedPackets=[]
 lostPackets = []
+
+sf7count = 0
+sf8count = 0
+sf9count = 0
+sf10count = 0
+sf11count = 0
+sf12count = 0
 
 Ptx = 14
 gamma = 2.08
@@ -747,7 +771,7 @@ if experiment in [0,1,4]:
     minsensi = sensi[5,2]  # 5th row is SF12, 2nd column is BW125
 elif experiment == 2:
     minsensi = -112.0   # no experiments, so value from datasheet
-elif experiment == 3:
+elif experiment == 3 or experiment == 5:
     minsensi = np.amin(sensi) ## Experiment 3 can use any setting, so take minimum
 
 Lpl = Ptx - minsensi
@@ -863,11 +887,17 @@ V = 3.0     # voltage XXX
 #sent = sum(n.sent for n in nodes)
 energy = 0.0
 rectim = 0
+time = []
 for i in range(0, nrNodes):
     for n in range(0, len(nodes[i].packet)):
         rectim = rectim + nodes[i].packet[n].rectime
     rectim = rectim/len(nodes[i].packet)
+    time.append(rectim)
     energy = (energy + rectim * mA * V * nodes[i].sent)/1000.0
+print('time:', len(time))
+
+delay = np.mean(time)
+std_delay = np.std(time)
 
 # this can be done to keep graphics visible
 # if (graphics == 1):
@@ -876,12 +906,12 @@ for i in range(0, nrNodes):
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0/
 #fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "IntfAAAA.dat"
-fname = "exp" + str(experiment) + "_minairtime_16min.dat"
-print(fname)
+fname = "exp" + str(experiment) + "_minairtime_5min.dat"
+print (fname)
 if os.path.isfile(fname):
-    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy)
+    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)
 else:
-    res = "Nodes      DER0                  Collisions          OverallEnergy\n" + str(nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy)
+    res = "Nodes            DER0                         Collisions  OverallEnergy             Delay           STD_delay   SF7   SF8  SF9  SF10  SF11  SF12\n" +  str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)
 with open(fname, "a") as myfile:
     myfile.write(res)
 myfile.close()

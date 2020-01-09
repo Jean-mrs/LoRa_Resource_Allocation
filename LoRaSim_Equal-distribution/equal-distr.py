@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+﻿#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
  LoRaSim 0.2.1: simulate collisions in LoRa - directional nodes
@@ -502,6 +502,12 @@ class myPacket():
         global GL
         global nodes
         global minsensi
+        global sf7count
+        global sf8count
+        global sf9count
+        global sf10count
+        global sf11count
+        global sf12count
 
         # new: base station ID
         self.bs = bs
@@ -524,6 +530,43 @@ class myPacket():
             self.sf = 6
             self.cr = 1
             self.bw = 500
+
+
+	if experiment==6: # HEURISTICA
+            self.cr = 1
+            self.bw = 125
+            Priorisf = [0.47, 0.258, 0.143, 0.071, 0.035, 0.023]
+            Quantsf = nrNodes*Priorisf
+            if (self.nodeid >= 0) and (self.nodeid < Quantsf[0]):
+                self.sf = 7
+            elif (self.nodeid >= Quantsf[0]) and (self.nodeid < Quantsf[1]):
+                self.sf = 8
+            elif (self.nodeid >= Quantsf[1]) and (self.nodeid < Quantsf[2]):
+                self.sf = 9
+            elif (self.nodeid >= Quantsf[2]) and (self.nodeid < Quantsf[3]):
+                self.sf = 10
+            elif (self.nodeid >= Quantsf[3]) and (self.nodeid < Quantsf[4]):
+                self.sf = 11
+            elif (self.nodeid >= Quantsf[4]) and (self.nodeid < Quantsf[5]):
+                self.sf = 12
+
+            if (self.nodeid >= 0) and (self.nodeid < nrNodes / 8):
+                self.freq = CF1
+            elif (self.nodeid >= nrNodes / 8) and (self.nodeid < nrNodes / 4):
+                self.freq = CF2
+            elif (self.nodeid >= nrNodes / 4) and (self.nodeid < int(nrNodes / 2.66666666)):
+                self.freq = CF3
+            elif (self.nodeid >= int(nrNodes / 2.666666)) and (self.nodeid < nrNodes / 2):
+                self.freq = CF4
+            elif (self.nodeid >= nrNodes / 2) and (self.nodeid < int(nrNodes / 1.6)):
+                self.freq = CF5
+            elif (self.nodeid >= int(nrNodes / 1.6)) and (self.nodeid < int(nrNodes / 1.33333333)):
+                self.freq = CF6
+            elif (self.nodeid >= int(nrNodes / 1.33333333)) and (self.nodeid < int(nrNodes / 1.1428571429)):
+                self.freq = CF7
+            elif (self.nodeid >= int(nrNodes / 1.1428571429)) and (self.nodeid < nrNodes):
+                self.freq = CF8
+
         # lorawan
         if experiment == 4: 
             self.bw = 125
@@ -630,6 +673,19 @@ class myPacket():
             #global minsensi
             self.lost = self.rssi < minsensi
             #print "node {} bs {} lost {}".format(self.nodeid, self.bs, self.lost)
+
+        if self.sf == 7:
+            sf7count += 1
+        if self.sf == 8:
+            sf8count += 1
+        if self.sf == 9:
+            sf9count += 1
+        if self.sf == 10:
+            sf10count += 1
+        if self.sf == 11:
+            sf11count += 1
+        if self.sf == 12:
+            sf12count += 1
 
 
 #
@@ -756,6 +812,13 @@ packetSeq = 0
 recPackets=[]
 collidedPackets=[]
 lostPackets = []
+
+sf7count = 0
+sf8count = 0
+sf9count = 0
+sf10count = 0
+sf11count = 0
+sf12count = 0
 
 Ptx = 14
 gamma = 2.08
@@ -889,11 +952,16 @@ V = 3.0     # voltage XXX
 #sent = sum(n.sent for n in nodes)
 energy = 0.0
 rectim = 0
+time = []
 for i in range(0, nrNodes):
     for n in range(0, len(nodes[i].packet)):
         rectim = rectim + nodes[i].packet[n].rectime
     rectim = rectim/len(nodes[i].packet)
+    time.append(rectim)
     energy = (energy + rectim * mA * V * nodes[i].sent)/1000.0
+
+delay = np.mean(time)
+std_delay = np.std(time)
 # this can be done to keep graphics visible
 # if (graphics == 1):
 #     raw_input('Press Enter to continue ...')
@@ -901,12 +969,12 @@ for i in range(0, nrNodes):
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0
 #fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "EqDistr.dat"
-fname = "exp" + str(experiment) + "_Equaldistr_16min.dat"
+fname = "exp" + str(experiment) + "_Equaldistr_5min.dat"
 print (fname)
 if os.path.isfile(fname):
-    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy)
+    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)
 else:
-    res = "Nodes      DER0                  Collisions          OverallEnergy\n" + str(nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy)
+    res = "Nodes            DER0                         Collisions  OverallEnergy             Delay           STD_delay   SF7   SF8  SF9  SF10  SF11  SF12\n" +  str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)
 with open(fname, "a") as myfile:
     myfile.write(res)
 myfile.close()
