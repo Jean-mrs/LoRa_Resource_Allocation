@@ -900,7 +900,6 @@ for i in range(0, nrNodes):
     rectim = rectim/len(nodes[i].packet)
     energy = (energy + rectim * mA * V * nodes[i].sent)/1000.0
 
-print(rectim)
 
 # energy = sum(sum(node.packet[n].rectime for n in range(0, len(node.packet)))/len(node.packet) * mA * V * node.sent for node in nodes) / 1e6
 #
@@ -931,12 +930,12 @@ avgDER = (sumder)/nrBS
 
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0
-fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "teste.dat"
+fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "Approx-alg.dat"
 print (fname)
 if os.path.isfile(fname):
-    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(rectim)
+    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy)
 else:
-    res = "Nodes      DER0                  Collisions          OverallEnergy\n" + str(nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy) + " " + str(rectim)
+    res = "Nodes      DER0                  Collisions          OverallEnergy\n" + str(nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy)
 with open(fname, "a") as myfile:
     myfile.write(res)
 myfile.close()

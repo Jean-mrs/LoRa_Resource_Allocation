@@ -529,12 +529,6 @@ class myPacket():
         global nodes
         global data
         global minsensi
-        global sf7count
-        global sf8count
-        global sf9count
-        global sf10count
-        global sf11count
-        global sf12count
 
         # new: base station ID
         self.txpow = Ptx
@@ -708,19 +702,6 @@ class myPacket():
             self.lost = self.rssi < minsensi
             #print ("node {} bs {} lost {}".format(self.nodeid, self.bs, self.lost))
 
-        if self.sf == 7:
-            sf7count += 1
-        if self.sf == 8:
-            sf8count += 1
-        if self.sf == 9:
-            sf9count += 1
-        if self.sf == 10:
-            sf10count += 1
-        if self.sf == 11:
-            sf11count += 1
-        if self.sf == 12:
-            sf12count += 1
-
 
 #
 # main discrete event loop, runs for each node
@@ -854,14 +835,6 @@ recPackets=[]
 collidedPackets=[]
 lostPackets = []
 
-sf7count = 0
-sf8count = 0
-sf9count = 0
-sf10count = 0
-sf11count = 0
-sf12count = 0
-
-
 Ptx = 14
 gamma = 2.08
 d0 = 40.0
@@ -953,12 +926,12 @@ print ("nr received packets (independent of right base station)", len(recPackets
 print ("nr collided packets", len(collidedPackets))
 print ("nr lost packets (not correct)", len(lostPackets))
 
-sumer = 0
+sum = 0
 for i in range(0,nrBS):
     print ("packets at BS",i, ":", len(packetsRecBS[i]))
-    sumer = sumer + len(packetsRecBS[i])
+    sum = sum + len(packetsRecBS[i])
 print ("sent packets: ", packetSeq)
-print ("overall received at right BS: ", sumer)
+print ("overall received at right BS: ", sum)
 
 sumSent = 0
 sent = []
@@ -1034,17 +1007,12 @@ V = 3.0     # voltage XXX
 #sent = sum(n.sent for n in nodes)
 energy = 0.0
 rectim = 0
-time = []
 for i in range(0, nrNodes):
     for n in range(0, len(nodes[i].packet)):
         rectim = rectim + nodes[i].packet[n].rectime
     rectim = rectim/len(nodes[i].packet)
-    time.append(rectim)
     energy = (energy + rectim * mA * V * nodes[i].sent)/1000.0
-print('time:', len(time))
 
-delay = np.mean(time)
-std_delay = np.std(time)
 # this can be done to keep graphics visible
 # if (graphics == 1):
 #     raw_input('Press Enter to continue ...')
@@ -1053,13 +1021,12 @@ std_delay = np.std(time)
 
 # name of file would be:  exp0.dat for experiment 0
 #fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "Nagib.dat"
-fname = "exp" + str(experiment) + "_Nagib_16min.dat"
+fname = "exp" + str(experiment) + "_Nagib_8min.dat"
 print (fname)
 if os.path.isfile(fname):
-    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)
+    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy)
 else:
-    res = "Nodes            DER0                         Collisions  OverallEnergy             Delay           STD_delay   SF7   SF8  SF9  SF10  SF11  SF12\n" +  str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)
+    res = "Nodes      DER0                  Collisions          OverallEnergy\n" + str(nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy)
 with open(fname, "a") as myfile:
     myfile.write(res)
 myfile.close()
-
