@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
@@ -535,209 +534,245 @@ class myPacket():
             Priorisf = [0.47, 0.258, 0.143, 0.071, 0.035, 0.023]
             Quantsf = [element * nrNodes for element in Priorisf]
             print(Quantsf)
-            print(int(Quantsf[0] / 2))
+            print(int(Quantsf[1] / 8))
+            # if (self.nodeid >= 0) and (self.nodeid < Quantsf[0]):
+            #     self.sf = 7
+            #     minX = 0
+            #
+            # elif (self.nodeid >= Quantsf[0]) and (self.nodeid < int(Quantsf[1] + Quantsf[0])):
+            #     self.sf = 8
+            #     minX = 1
+            #
+            # elif (self.nodeid >= Quantsf[1]) and (self.nodeid < Quantsf[2] + Quantsf[1]):
+            #     self.sf = 9
+            #     minX = 2
+            #
+            # elif (self.nodeid >= Quantsf[2]) and (self.nodeid < Quantsf[3] + Quantsf[2]):
+            #     self.sf = 10
+            #     minX = 3
+            #
+            # elif (self.nodeid >= Quantsf[3]) and (self.nodeid < Quantsf[4] + Quantsf[3]):
+            #     self.sf = 11
+            #     minX = 4
+            #
+            # elif (self.nodeid >= Quantsf[4]) and (self.nodeid < Quantsf[5] + Quantsf[4]):
+            #     self.sf = 12
+            #     minX = 5
+            sfatual = 0
             minX = 0
             minY = 0
-            if (self.nodeid >= 0) and (self.nodeid < Quantsf[0]):
-                self.sf = 7
-                minX = 0
+            for sfs in range(0, 6):
 
-            elif (self.nodeid >= Quantsf[0]) and (self.nodeid < int(Quantsf[1] + Quantsf[0])):
-                self.sf = 8
-                minX = 1
+                if (self.nodeid >= sfatual) and (self.nodeid < Quantsf[sfs] + sfatual):
+                    self.sf = 7 + sfs
+                    sfatual += Quantsf[sfs]
+                    minX = 0
+                    if (self.nodeid >= 0) and (self.nodeid < sfatual + int((Quantsf[sfs]) / 8)):
+                        self.freq = CF1
+                        minY = 0
+                    elif (self.nodeid >= int(sfatual) + int((Quantsf[sfs]) / 8)) and (self.nodeid < int(sfatual) + 2 * int((Quantsf[sfs]) / 8)):
+                        self.freq = CF2
+                        minY = 1
+                    elif (self.nodeid >=int(sfatual) + 2 * int((Quantsf[sfs]) / 8)) and (self.nodeid <int(sfatual) + 3 * int((Quantsf[sfs]) / 8)):
+                        self.freq = CF3
+                        minY = 2
+                    elif (self.nodeid >=int(sfatual) +  3 * int((Quantsf[sfs]) / 8)) and (self.nodeid <int(sfatual) + 4 * int((Quantsf[sfs]) / 8)):
+                        self.freq = CF4
+                        minY = 3
+                    elif (self.nodeid >=int(sfatual) + 4 * int((Quantsf[sfs]) / 8)) and (self.nodeid <int(sfatual) +  5 * int((Quantsf[sfs]) / 8)):
+                        self.freq = CF5
+                        minY = 4
+                    elif (self.nodeid >=int(sfatual) +  5 * int((Quantsf[sfs]) / 8)) and (self.nodeid <int(sfatual) +  6 * int((Quantsf[sfs]) / 8)):
+                        self.freq = CF6
+                        minY = 5
+                    elif (self.nodeid >=int(sfatual) +  6 * int((Quantsf[sfs] + sfatual) / 8)) and (self.nodeid <int(sfatual) + 7 * int((Quantsf[sfs]) / 8)):
+                        self.freq = CF7
+                        minY = 6
+                    elif (self.nodeid >=int(sfatual) + 7 * int((Quantsf[sfs]) / 8)) and (self.nodeid <int(sfatual) + 8 * int((Quantsf[sfs]) / 8)):
+                        self.freq = CF8
+                        minY = 7
+                    elif (self.nodeid >=int(sfatual) + 8 * int((Quantsf[sfs]) / 8)) and Quantsf[sfs] % 8 != 0:
+                        if self.nodeid <int(sfatual) + 8 * int((Quantsf[sfs]) / 8) + Quantsf[sfs] % 8:
+                            if Quantsf[sfs] % 8 >= 1 and self.nodeid ==int(sfatual) + 8 * int(Quantsf[sfs] / 8):
+                                self.freq = CF1
+                                minY = 0
+                            elif Quantsf[sfs] % 8 >= 2 and self.nodeid ==int(sfatual) + 8 * int(Quantsf[sfs] / 8) + 1:
+                                self.freq = CF2
+                                minY = 1
+                            elif Quantsf[sfs] % 8 >= 3 and self.nodeid ==int(sfatual) + 8 * int(Quantsf[sfs] / 8) + 2:
+                                self.freq = CF3
+                                minY = 2
+                            elif Quantsf[sfs] % 8 >= 4 and self.nodeid ==int(sfatual) + 8 * int(Quantsf[sfs] / 8) + 3:
+                                self.freq = CF4
+                                minY = 3
+                            elif Quantsf[sfs] % 8 >= 5 and self.nodeid ==int(sfatual) + 8 * int(Quantsf[sfs] / 8) + 4:
+                                self.freq = CF5
+                                minY = 4
+                            elif Quantsf[sfs] % 8 >= 6 and self.nodeid ==int(sfatual) + 8 * int(Quantsf[sfs] / 8) + 5:
+                                self.freq = CF6
+                                minY = 5
+                            elif Quantsf[sfs] % 8 >= 7 and self.nodeid ==int(sfatual) + 8 * int(Quantsf[sfs] / 8) + 6:
+                                self.freq = CF7
+                                minY = 6
 
-            elif (self.nodeid >= Quantsf[1]) and (self.nodeid < Quantsf[2] + Quantsf[1]):
-                self.sf = 9
-                minX = 2
 
-            elif (self.nodeid >= Quantsf[2]) and (self.nodeid < Quantsf[3] + Quantsf[2]):
-                self.sf = 10
-                minX = 3
 
-            elif (self.nodeid >= Quantsf[3]) and (self.nodeid < Quantsf[4] + Quantsf[3]):
-                self.sf = 11
-                minX = 4
 
-            elif (self.nodeid >= Quantsf[4]) and (self.nodeid < Quantsf[5] + Quantsf[4]):
-                self.sf = 12
-                minX = 5
 
-            if (self.nodeid >= 0) and (self.nodeid < Quantsf[0]):
-                self.sf = 7
-                minX = 0
-                if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
-                    self.freq = CF1
-                    minY = 0
-                elif (self.nodeid >= int(Quantsf[0] / 8)) and (self.nodeid < 2 * int(Quantsf[0] / 8)):
-                    self.freq = CF2
-                    minY = 1
-                elif (self.nodeid >= 2 * int(Quantsf[0] / 8)) and (self.nodeid < 3 * int(Quantsf[0] / 8)):
-                    self.freq = CF3
-                    minY = 2
-                elif (self.nodeid >= 3 * int(Quantsf[0] / 8)) and (self.nodeid < 4 * int(Quantsf[0] / 8)):
-                    self.freq = CF4
-                    minY = 3
-                elif (self.nodeid >= 4 * int(Quantsf[0] / 8)) and (self.nodeid < 5 * int(Quantsf[0] / 8)):
-                    self.freq = CF5
-                    minY = 4
-                elif (self.nodeid >= 5 * int(Quantsf[0] / 8)) and (self.nodeid < 6 * int(Quantsf[0] / 8)):
-                    self.freq = CF6
-                    minY = 5
-                elif (self.nodeid >= 6 * int(Quantsf[0] / 8)) and (self.nodeid < 7 * int(Quantsf[0] / 8)):
-                    self.freq = CF7
-                    minY = 6
-                elif (self.nodeid >= 7 * int(Quantsf[0] / 8)) and (self.nodeid < Quantsf[0]):
-                    self.freq = CF8
-                    minY = 7
 
-            elif (self.nodeid >= Quantsf[0]) and (self.nodeid < Quantsf[1] + Quantsf[0]):
-                self.sf = 8
-                minX = 1
-                if (self.nodeid >= Quantsf[0]) and (self.nodeid < int(Quantsf[0] + Quantsf[1] / 8)):
-                    self.freq = CF1
-                    minY = 0
-                elif (self.nodeid >= int(Quantsf[0] + Quantsf[1] / 8)) and (
-                        self.nodeid < int(Quantsf[0] + 2 * Quantsf[1] / 8)):
-                    self.freq = CF2
-                    minY = 1
-                elif (self.nodeid >= int(Quantsf[0] + 2 * Quantsf[1] / 8)) and (
-                        self.nodeid < int(Quantsf[0] + 3 * Quantsf[1] / 8)):
-                    self.freq = CF3
-                    minY = 2
-                elif (self.nodeid >= int(Quantsf[0] + 3 * Quantsf[1] / 8)) and (
-                        self.nodeid < int(Quantsf[0] + 4 * Quantsf[1] / 8)):
-                    self.freq = CF4
-                    minY = 3
-                elif (self.nodeid >= int(Quantsf[0] + 4 * Quantsf[1] / 8)) and (
-                        self.nodeid < int(Quantsf[0] + 5 * Quantsf[1] / 8)):
-                    self.freq = CF5
-                    minY = 4
-                elif (self.nodeid >= int(Quantsf[0] + 5 * Quantsf[1] / 8)) and (
-                        self.nodeid < int(Quantsf[0] + 6 * Quantsf[1] / 8)):
-                    self.freq = CF6
-                    minY = 5
-                elif (self.nodeid >= int(Quantsf[0] + 6 * Quantsf[1] / 8)) and (
-                        self.nodeid < int(Quantsf[0] + 7 * Quantsf[1] / 8)):
-                    self.freq = CF7
-                    minY = 6
-                elif (self.nodeid >= int(Quantsf[0] + 7 * Quantsf[1] / 8)) and (self.nodeid < Quantsf[0] + Quantsf[1]):
-                    self.freq = CF8
-                    minY = 7
+                # if Quantsf[0] % 8 != 0 and  (8 * int(Quantsf[0] / 8) != Quantsf[0]):
+                #     resto = Quantsf[0] % 8
+                #     while resto != 0:
+                #         collision0 = Umatrix['SF7'].tolist()
 
-            elif (self.nodeid >= Quantsf[1]) and (self.nodeid < Quantsf[2] + Quantsf[1]):
-                self.sf = 9
-                minX = 2
-                if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
-                    self.freq = CF1
-                    minY = 0
-                elif (self.nodeid >= int(Quantsf[2] / 8)) and (self.nodeid < 2 * int(Quantsf[2] / 8)):
-                    self.freq = CF2
-                    minY = 1
-                elif (self.nodeid >= 2 * int(Quantsf[2] / 8)) and (self.nodeid < 3 * int(Quantsf[2] / 8)):
-                    self.freq = CF3
-                    minY = 2
-                elif (self.nodeid >= 3 * int(Quantsf[2] / 8)) and (self.nodeid < 4 * int(Quantsf[2] / 8)):
-                    self.freq = CF4
-                    minY = 3
-                elif (self.nodeid >= 4 * int(Quantsf[2] / 8)) and (self.nodeid < 5 * int(Quantsf[2] / 8)):
-                    self.freq = CF5
-                    minY = 4
-                elif (self.nodeid >= 5 * int(Quantsf[2] / 8)) and (self.nodeid < 6 * int(Quantsf[2] / 8)):
-                    self.freq = CF6
-                    minY = 5
-                elif (self.nodeid >= 6 * int(Quantsf[2] / 8)) and (self.nodeid < 7 * int(Quantsf[2] / 8)):
-                    self.freq = CF7
-                    minY = 6
-                elif (self.nodeid >= 7 * int(Quantsf[2] / 8)) and (self.nodeid < Quantsf[2]):
-                    self.freq = CF8
-                    minY = 7
-            elif (self.nodeid >= Quantsf[2]) and (self.nodeid < Quantsf[3] + Quantsf[2]):
-                self.sf = 10
-                minX = 3
-                if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
-                    self.freq = CF1
-                    minY = 0
-                elif (self.nodeid >= int(Quantsf[3] / 8)) and (self.nodeid < 2 * int(Quantsf[3] / 8)):
-                    self.freq = CF2
-                    minY = 1
-                elif (self.nodeid >= 2 * int(Quantsf[3] / 8)) and (self.nodeid < 3 * int(Quantsf[3] / 8)):
-                    self.freq = CF3
-                    minY = 2
-                elif (self.nodeid >= 3 * int(Quantsf[3] / 8)) and (self.nodeid < 4 * int(Quantsf[3] / 8)):
-                    self.freq = CF4
-                    minY = 3
-                elif (self.nodeid >= 4 * int(Quantsf[3] / 8)) and (self.nodeid < 5 * int(Quantsf[3] / 8)):
-                    self.freq = CF5
-                    minY = 4
-                elif (self.nodeid >= 5 * int(Quantsf[3] / 8)) and (self.nodeid < 6 * int(Quantsf[3] / 8)):
-                    self.freq = CF6
-                    minY = 5
-                elif (self.nodeid >= 6 * int(Quantsf[3] / 8)) and (self.nodeid < 7 * int(Quantsf[3] / 8)):
-                    self.freq = CF7
-                    minY = 6
-                elif (self.nodeid >= 7 * int(Quantsf[3] / 8)) and (self.nodeid < Quantsf[3]):
-                    self.freq = CF8
-                    minY = 7
-            elif (self.nodeid >= Quantsf[3]) and (self.nodeid < Quantsf[4] + Quantsf[3]):
-                self.sf = 11
-                minX = 4
-                if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
-                    self.freq = CF1
-                    minY = 0
-                elif (self.nodeid >= int(Quantsf[4] / 8)) and (self.nodeid < 2 * int(Quantsf[4] / 8)):
-                    self.freq = CF2
-                    minY = 1
-                elif (self.nodeid >= 2 * int(Quantsf[4] / 8)) and (self.nodeid < 3 * int(Quantsf[4] / 8)):
-                    self.freq = CF3
-                    minY = 2
-                elif (self.nodeid >= 3 * int(Quantsf[4] / 8)) and (self.nodeid < 4 * int(Quantsf[4] / 8)):
-                    self.freq = CF4
-                    minY = 3
-                elif (self.nodeid >= 4 * int(Quantsf[4] / 8)) and (self.nodeid < 5 * int(Quantsf[4] / 8)):
-                    self.freq = CF5
-                    minY = 4
-                elif (self.nodeid >= 5 * int(Quantsf[4] / 8)) and (self.nodeid < 6 * int(Quantsf[4] / 8)):
-                    self.freq = CF6
-                    minY = 5
-                elif (self.nodeid >= 6 * int(Quantsf[4] / 8)) and (self.nodeid < 7 * int(Quantsf[4] / 8)):
-                    self.freq = CF7
-                    minY = 6
-                elif (self.nodeid >= 7 * int(Quantsf[4] / 8)) and (self.nodeid < Quantsf[4]):
-                    self.freq = CF8
-                    minY = 7
-            elif (self.nodeid >= Quantsf[4]) and (self.nodeid < Quantsf[5] + Quantsf[4]):
-                self.sf = 12
-                minX = 5
-                if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
-                    self.freq = CF1
-                    minY = 0
-                elif (self.nodeid >= int(Quantsf[5] / 8)) and (self.nodeid < 2 * int(Quantsf[5] / 8)):
-                    self.freq = CF2
-                    minY = 1
-                elif (self.nodeid >= 2 * int(Quantsf[5] / 8)) and (self.nodeid < 3 * int(Quantsf[5] / 8)):
-                    self.freq = CF3
-                    minY = 2
-                elif (self.nodeid >= 3 * int(Quantsf[5] / 8)) and (self.nodeid < 4 * int(Quantsf[5] / 8)):
-                    self.freq = CF4
-                    minY = 3
-                elif (self.nodeid >= 4 * int(Quantsf[5] / 8)) and (self.nodeid < 5 * int(Quantsf[5] / 8)):
-                    self.freq = CF5
-                    minY = 4
-                elif (self.nodeid >= 5 * int(Quantsf[5] / 8)) and (self.nodeid < 6 * int(Quantsf[5] / 8)):
-                    self.freq = CF6
-                    minY = 5
-                elif (self.nodeid >= 6 * int(Quantsf[5] / 8)) and (self.nodeid < 7 * int(Quantsf[5] / 8)):
-                    self.freq = CF7
-                    minY = 6
-                elif (self.nodeid >= 7 * int(Quantsf[5] / 8)) and (self.nodeid < Quantsf[5]):
-                    self.freq = CF8
-                    minY = 7
+            # elif (self.nodeid >= Quantsf[0]) and (self.nodeid < Quantsf[1] + Quantsf[0]):
+            #     self.sf = 8
+            #     minX = 1
+            #     if (self.nodeid >= Quantsf[0]) and (self.nodeid < int(Quantsf[0] + Quantsf[1] / 8)):
+            #         self.freq = CF1
+            #         minY = 0
+            #     elif (self.nodeid >= int(Quantsf[0] + Quantsf[1] / 8)) and (self.nodeid < int(Quantsf[0] + 2 * Quantsf[1] / 8)):
+            #         self.freq = CF2
+            #         minY = 1
+            #     elif (self.nodeid >= int(Quantsf[0] + 2 * Quantsf[1] / 8)) and (
+            #             self.nodeid < int(Quantsf[0] + 3 * Quantsf[1] / 8)):
+            #         self.freq = CF3
+            #         minY = 2
+            #     elif (self.nodeid >= int(Quantsf[0] + 3 * Quantsf[1] / 8)) and (
+            #             self.nodeid < int(Quantsf[0] + 4 * Quantsf[1] / 8)):
+            #         self.freq = CF4
+            #         minY = 3
+            #     elif (self.nodeid >= int(Quantsf[0] + 4 * Quantsf[1] / 8)) and (
+            #             self.nodeid < int(Quantsf[0] + 5 * Quantsf[1] / 8)):
+            #         self.freq = CF5
+            #         minY = 4
+            #     elif (self.nodeid >= int(Quantsf[0] + 5 * Quantsf[1] / 8)) and (
+            #             self.nodeid < int(Quantsf[0] + 6 * Quantsf[1] / 8)):
+            #         self.freq = CF6
+            #         minY = 5
+            #     elif (self.nodeid >= int(Quantsf[0] + 6 * Quantsf[1] / 8)) and (
+            #             self.nodeid < int(Quantsf[0] + 7 * Quantsf[1] / 8)):
+            #         self.freq = CF7
+            #         minY = 6
+            #     elif (self.nodeid >= int(Quantsf[0] + 7 * Quantsf[1] / 8)) and (self.nodeid < Quantsf[0] + Quantsf[1]):
+            #         self.freq = CF8
+            #         minY = 7
+            #
+            # elif (self.nodeid >= Quantsf[1]) and (self.nodeid < Quantsf[2] + Quantsf[1]):
+            #     self.sf = 9
+            #     minX = 2
+            #     if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
+            #         self.freq = CF1
+            #         minY = 0
+            #     elif (self.nodeid >= int(Quantsf[2] / 8)) and (self.nodeid < 2 * int(Quantsf[2] / 8)):
+            #         self.freq = CF2
+            #         minY = 1
+            #     elif (self.nodeid >= 2 * int(Quantsf[2] / 8)) and (self.nodeid < 3 * int(Quantsf[2] / 8)):
+            #         self.freq = CF3
+            #         minY = 2
+            #     elif (self.nodeid >= 3 * int(Quantsf[2] / 8)) and (self.nodeid < 4 * int(Quantsf[2] / 8)):
+            #         self.freq = CF4
+            #         minY = 3
+            #     elif (self.nodeid >= 4 * int(Quantsf[2] / 8)) and (self.nodeid < 5 * int(Quantsf[2] / 8)):
+            #         self.freq = CF5
+            #         minY = 4
+            #     elif (self.nodeid >= 5 * int(Quantsf[2] / 8)) and (self.nodeid < 6 * int(Quantsf[2] / 8)):
+            #         self.freq = CF6
+            #         minY = 5
+            #     elif (self.nodeid >= 6 * int(Quantsf[2] / 8)) and (self.nodeid < 7 * int(Quantsf[2] / 8)):
+            #         self.freq = CF7
+            #         minY = 6
+            #     elif (self.nodeid >= 7 * int(Quantsf[2] / 8)) and (self.nodeid < Quantsf[2]):
+            #         self.freq = CF8
+            #         minY = 7
+            # elif (self.nodeid >= Quantsf[2]) and (self.nodeid < Quantsf[3] + Quantsf[2]):
+            #     self.sf = 10
+            #     minX = 3
+            #     if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
+            #         self.freq = CF1
+            #         minY = 0
+            #     elif (self.nodeid >= int(Quantsf[3] / 8)) and (self.nodeid < 2 * int(Quantsf[3] / 8)):
+            #         self.freq = CF2
+            #         minY = 1
+            #     elif (self.nodeid >= 2 * int(Quantsf[3] / 8)) and (self.nodeid < 3 * int(Quantsf[3] / 8)):
+            #         self.freq = CF3
+            #         minY = 2
+            #     elif (self.nodeid >= 3 * int(Quantsf[3] / 8)) and (self.nodeid < 4 * int(Quantsf[3] / 8)):
+            #         self.freq = CF4
+            #         minY = 3
+            #     elif (self.nodeid >= 4 * int(Quantsf[3] / 8)) and (self.nodeid < 5 * int(Quantsf[3] / 8)):
+            #         self.freq = CF5
+            #         minY = 4
+            #     elif (self.nodeid >= 5 * int(Quantsf[3] / 8)) and (self.nodeid < 6 * int(Quantsf[3] / 8)):
+            #         self.freq = CF6
+            #         minY = 5
+            #     elif (self.nodeid >= 6 * int(Quantsf[3] / 8)) and (self.nodeid < 7 * int(Quantsf[3] / 8)):
+            #         self.freq = CF7
+            #         minY = 6
+            #     elif (self.nodeid >= 7 * int(Quantsf[3] / 8)) and (self.nodeid < Quantsf[3]):
+            #         self.freq = CF8
+            #         minY = 7
+            # elif (self.nodeid >= Quantsf[3]) and (self.nodeid < Quantsf[4] + Quantsf[3]):
+            #     self.sf = 11
+            #     minX = 4
+            #     if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
+            #         self.freq = CF1
+            #         minY = 0
+            #     elif (self.nodeid >= int(Quantsf[4] / 8)) and (self.nodeid < 2 * int(Quantsf[4] / 8)):
+            #         self.freq = CF2
+            #         minY = 1
+            #     elif (self.nodeid >= 2 * int(Quantsf[4] / 8)) and (self.nodeid < 3 * int(Quantsf[4] / 8)):
+            #         self.freq = CF3
+            #         minY = 2
+            #     elif (self.nodeid >= 3 * int(Quantsf[4] / 8)) and (self.nodeid < 4 * int(Quantsf[4] / 8)):
+            #         self.freq = CF4
+            #         minY = 3
+            #     elif (self.nodeid >= 4 * int(Quantsf[4] / 8)) and (self.nodeid < 5 * int(Quantsf[4] / 8)):
+            #         self.freq = CF5
+            #         minY = 4
+            #     elif (self.nodeid >= 5 * int(Quantsf[4] / 8)) and (self.nodeid < 6 * int(Quantsf[4] / 8)):
+            #         self.freq = CF6
+            #         minY = 5
+            #     elif (self.nodeid >= 6 * int(Quantsf[4] / 8)) and (self.nodeid < 7 * int(Quantsf[4] / 8)):
+            #         self.freq = CF7
+            #         minY = 6
+            #     elif (self.nodeid >= 7 * int(Quantsf[4] / 8)) and (self.nodeid < Quantsf[4]):
+            #         self.freq = CF8
+            #         minY = 7
+            # elif (self.nodeid >= Quantsf[4]) and (self.nodeid < Quantsf[5] + Quantsf[4]):
+            #     self.sf = 12
+            #     minX = 5
+            #     if (self.nodeid >= 0) and (self.nodeid < int(Quantsf[0] / 8)):
+            #         self.freq = CF1
+            #         minY = 0
+            #     elif (self.nodeid >= int(Quantsf[5] / 8)) and (self.nodeid < 2 * int(Quantsf[5] / 8)):
+            #         self.freq = CF2
+            #         minY = 1
+            #     elif (self.nodeid >= 2 * int(Quantsf[5] / 8)) and (self.nodeid < 3 * int(Quantsf[5] / 8)):
+            #         self.freq = CF3
+            #         minY = 2
+            #     elif (self.nodeid >= 3 * int(Quantsf[5] / 8)) and (self.nodeid < 4 * int(Quantsf[5] / 8)):
+            #         self.freq = CF4
+            #         minY = 3
+            #     elif (self.nodeid >= 4 * int(Quantsf[5] / 8)) and (self.nodeid < 5 * int(Quantsf[5] / 8)):
+            #         self.freq = CF5
+            #         minY = 4
+            #     elif (self.nodeid >= 5 * int(Quantsf[5] / 8)) and (self.nodeid < 6 * int(Quantsf[5] / 8)):
+            #         self.freq = CF6
+            #         minY = 5
+            #     elif (self.nodeid >= 6 * int(Quantsf[5] / 8)) and (self.nodeid < 7 * int(Quantsf[5] / 8)):
+            #         self.freq = CF7
+            #         minY = 6
+            #     elif (self.nodeid >= 7 * int(Quantsf[5] / 8)) and (self.nodeid < Quantsf[5]):
+            #         self.freq = CF8
+            #         minY = 7
 
             m_uti[minX, minY] = m_uti[minX, minY] + 1  # Matrix
             Umatrix = pd.DataFrame(m_uti)
             Umatrix.columns = ['CF1', 'CF2', 'CF3', 'CF4', 'CF5', 'CF6', 'CF7', 'CF8']
             Umatrix.index = ['SF7', 'SF8', 'SF9', 'SF10', 'SF11', 'SF12']
-            print(Umatrix.T)
+            Umatrix = Umatrix.T
+            print(Umatrix)
 
         # lorawan
         if experiment == 4:
@@ -995,6 +1030,7 @@ sf9count = 0
 sf10count = 0
 sf11count = 0
 sf12count = 0
+
 
 Ptx = 14
 gamma = 2.08
