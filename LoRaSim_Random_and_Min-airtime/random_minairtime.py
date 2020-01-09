@@ -3,13 +3,17 @@
 """
  LoRaSim 0.2.1: simulate collisions in LoRa - directional nodes
  Copyright © 2016-2017 Thiemo Voigt <thiemo@sics.se> and Martin Bor <m.bor@lancaster.ac.uk>
+
  This work is licensed under the Creative Commons Attribution 4.0
  International License. To view a copy of this license,
  visit http://creativecommons.org/licenses/by/4.0/.
+
  Do LoRa Low-Power Wide-Area Networks Scale? Martin Bor, Utz Roedig, Thiemo Voigt
  and Juan Alonso, MSWiM '16, http://dx.doi.org/10.1145/2988287.2989163
+
  Mitigating Inter-Network Interference in LoRa Low-Power Wide-Area Networks,
  Thiemo Voigt, Martin Bor, Utz Roedig, and Juan Alonso, EWSN '17
+
  $Date: 2017-05-12 19:16:16 +0100 (Fri, 12 May 2017) $
  $Revision: 334 $
 """
@@ -55,8 +59,8 @@
 """
 
 import simpy
-import random
 import pandas as pd
+import random
 import numpy as np
 import math
 import sys
@@ -69,7 +73,6 @@ graphics = 0
 
 # do the full collision check
 full_collision = True
-
 
 # CF values
 CF1 = 903900000
@@ -100,15 +103,13 @@ dir_180 = -3
 
 
 # this is an array with measured values for sensitivity
-# see paper, Table 3 u = u + T_SF[cf_sf['sf']] * L
+# see paper, Table 3
 sf7 = np.array(  [7, -125, -124.25, -120.75])
 sf8 = np.array(  [8, -128, -126.75, -124.0])
 sf9 = np.array(  [9, -131, -128.25, -127.5])
 sf10 = np.array([10, -134, -130.25, -128.75])
 sf11 = np.array([11, -136, -132.75, -128.75])
 sf12 = np.array([12, -137, -132.25, -132.25])
-
-
 
 #
 # check for collisions at base station
@@ -150,12 +151,12 @@ def checkcollision(packet):
 #        |f1-f2| <= 60 kHz if f1 or f2 has bw 250 
 #        |f1-f2| <= 30 kHz if f1 or f2 has bw 125 
 def frequencyCollision(p1,p2):
-    if (abs(p1.freq-p2.freq)<=120000 and (p1.bw==500 or p2.bw==500)):
+    if (abs(p1.freq-p2.freq)<=120 and (p1.bw==500 or p2.freq==500)):
         return True
-    elif (abs(p1.freq-p2.freq)<=60000 and (p1.bw==250 or p2.bw==250)):
+    elif (abs(p1.freq-p2.freq)<=60 and (p1.bw==250 or p2.freq==250)):
         return True
     else:
-        if (abs(p1.freq-p2.freq)<=30000):
+        if (abs(p1.freq-p2.freq)<=30):
             return True
     return False
 
@@ -213,11 +214,14 @@ def airtime(sf,cr,pl,bw):
 
     Tsym = (2.0**sf)/bw
     Tpream = (Npream + 4.25)*Tsym
-    #print ("sf", sf, " cr", cr, "pl", pl, "bw", bw)
+    #print "sf", sf, " cr", cr, "pl", pl, "bw", bw
     payloadSymbNB = 8 + max(math.ceil((8.0*pl-4.0*sf+28+16-20*H)/(4.0*(sf-2*DE)))*(cr+4),0)
     Tpayload = payloadSymbNB * Tsym
     return Tpream + Tpayload
 
+
+
+#
 # this function creates a BS
 #
 class myBS():
@@ -336,7 +340,7 @@ class myBS():
                 self.y = 4*maxY/5.0
 
         
-        print ("BSx:", self.x, "BSy:", self.y)
+        # print "BSx:", self.x, "BSy:", self.y
 
         global graphics
         if (graphics):
@@ -400,10 +404,10 @@ class myNode():
                     else:
                         rounds = rounds + 1
                         if rounds == 100:
-                            print ("could not place new node, giving up")
+                            # print "could not place new node, giving up"
                             exit(-2) 
             else:
-                print ("first node")
+                # print "first node"
                 self.x = posx
                 self.y = posy
                 found = 1
@@ -417,7 +421,7 @@ class myNode():
                 d = 0.000000000001
             self.dist.append(d)
             self.packet.append(myPacket(self.id, packetlen, self.dist[i], i))
-        #print(('node %d' %id, "x", self.x, "y", self.y, "dist: ", self.dist, "my BS:", self.bs.id))
+        #print('node %d' %id, "x", self.x, "y", self.y, "dist: ", self.dist, "my BS:", self.bs.id)
 
         self.sent = 0
 
@@ -443,15 +447,15 @@ class myNode():
     def updateRSSI(self):
         global bs
 
-        #print ("+++++++++uR node", self.id, " and bs ", self.bs.id )
-        #print ("node x,y", self.x, self.y)
-        #print ("main-bs x,y", bs[self.bs.id].x, bs[self.bs.id].y)
+        #print "+++++++++uR node", self.id, " and bs ", self.bs.id 
+        #print "node x,y", self.x, self.y
+        #print "main-bs x,y", bs[self.bs.id].x, bs[self.bs.id].y
         for i in range(0,len(self.packet)):
-            #print ("rssi before", self.packet[i].rssi)
-            #print ("packet bs", self.packet[i].bs)
-            #print ("packet bs x, y:", bs[self.packet[i].bs].x, bs[self.packet[i].bs].y            )
+            #print "rssi before", self.packet[i].rssi
+            #print "packet bs", self.packet[i].bs
+            #print "packet bs x, y:", bs[self.packet[i].bs].x, bs[self.packet[i].bs].y            
             if (self.bs.id == self.packet[i].bs):
-                #print ("packet to main bs, increase rssi ")
+                #print "packet to main bs, increase rssi "
                 self.packet[i].rssi = self.packet[i].rssi + dir_30
             else:
                 b1 = np.array([bs[self.bs.id].x, bs[self.bs.id].y])
@@ -460,27 +464,27 @@ class myNode():
 
                 ba = b1 - p
                 bc = b2 - p
-                #print (ba)
-                #print (bc)
+                #print ba
+                #print bc
 
                 cosine_angle = np.dot(ba, bc) / (np.linalg.norm(ba) * np.linalg.norm(bc))
                 angle = np.degrees(np.arccos(cosine_angle))
 
-                #print ("angle: ", angle)
+                #print "angle: ", angle
 
                 if (angle <= 30):
-                    #print ("rssi increase to other BS: 4")
+                    #print "rssi increase to other BS: 4"
                     self.packet[i].rssi = self.packet[i].rssi + dir_30
                 elif angle <= 90:
-                    #print ("rssi increase to other BS: 2")
+                    #print "rssi increase to other BS: 2"
                     self.packet[i].rssi = self.packet[i].rssi + dir_90
                 elif angle <= 150:
-                    #print ("rssi increase to other BS: -4")
+                    #print "rssi increase to other BS: -4"
                     self.packet[i].rssi = self.packet[i].rssi + dir_150
                 else:
-                    #print ("rssi increase to other BS: -3")
+                    #print "rssi increase to other BS: -3"
                     self.packet[i].rssi = self.packet[i].rssi + dir_180
-            #print ("packet rssi after", self.packet[i].rssi)
+            #print "packet rssi after", self.packet[i].rssi
 
 
 #
@@ -499,74 +503,44 @@ class myPacket():
         global nodes
         global data
         global minsensi
+        global sf7count
+        global sf8count
+        global sf9count
+        global sf10count
+        global sf11count
+        global sf12count
 
         # new: base station ID
         self.bs = bs
         self.nodeid = nodeid
 
-        self.sf = random.randint(7,12)
-        self.freq = random.choice([CF1,CF2, CF3, CF4, CF5, CF6, CF7, CF8])
-        print("Randon self.freq: ",self.freq)
-        self.cr = 1
-        self.bw = 125
 
-        if experiment == 4: 
-          
+        # for certain experiments override these    
+        if experiment==1 or experiment == 0: #RANDOM
+            self.sf = random.randint(7,12)
+            self.cr = 1
+            self.bw = 125
 
-            minX,minY = np.unravel_index(np.argmin(m_uti),m_uti.shape)
+        # for certain experiments override these    
+        if experiment==2: # MIN-AIRTIME
+            self.sf = 7
+            self.cr = 1
+            self.bw = 125
+        # lorawan
+        if experiment == 4:
+            self.sf = 12
+            self.cr = 1
+            self.bw = 125
 
-            if (minX == 0):
-                self.sf = 7
-
-            elif (minX == 1):
-                self.sf = 8
-
-            elif (minX == 2):
-                self.sf = 9
-
-            elif (minX == 3):
-                self.sf = 10
-
-            elif (minX == 4):
-                self.sf = 11
-
-            elif (minX == 5):
-                self.sf = 12
-
-            if (minY == 0):
-                self.freq = CF1
-
-            elif (minY == 1):
-                self.freq = CF2
-
-            elif (minY == 2):
-                self.freq = CF3
-
-            elif (minY == 3):
-                self.freq = CF4
-
-            elif (minY == 4):
-                self.freq = CF5
-
-            elif (minY == 5):
-                self.freq = CF6
-
-            elif (minY == 6):
-                self.freq = CF7
-
-            elif (minY == 7):
-                self.freq = CF8
-
-
-            at = airtime(self.sf, self.cr, 20, self.bw) #20 bytes
-            at2 = at/avgSendTime #no Lora-single-gw, at2 corresponde a: at * 1/L
-            print("at2:", at2)
-
-            m_uti[minX,minY] = m_uti[minX,minY] + at2
-
-
+        # for certain experiments override these and
+        # choose some random frequences
+        if experiment == 1:
+            self.freq = random.choice([904900000, 905100000, 904100000])
+        else:
+            self.freq = 903900000
+            
         # for experiment 3 find the best setting
-        # OBS, some hardcoded values
+        # OBS, some hardcoded values    
         Prx = Ptx  ## zero path loss by default
         # log-shadow
         #Lpl = Lpld0 + 10*gamma*math.log10(distance/d0)
@@ -577,7 +551,7 @@ class myPacket():
                 3.2 * math.pow(math.log10(11.75 * deviceHeight), 2) - 4.97) + (
                       44.9 - 6.55 * math.log10(bsHeight)) * math.log10(distance * 0.001)
 
-        #print (Lpl)
+        #print Lpl
         Prx = Ptx + GL - Lpl
         
         if (experiment == 3) or (experiment == 5):
@@ -605,7 +579,7 @@ class myPacket():
             self.sf = minsf
             self.bw = minbw
             if (minairtime == 9999):
-                #print ("does not reach base station"            )
+                #print "does not reach base station"            
                 exit(-1)
 
             self.rectime = minairtime
@@ -617,7 +591,7 @@ class myPacket():
                 # reduce the txpower if there's room left
                 self.txpow = max(2, self.txpow - math.floor(Prx - minsensi))
                 Prx = self.txpow - GL - Lpl
-                #print ('minsesi {} best txpow {}'.format(minsensi, self.txpow))
+                #print 'minsesi {} best txpow {}'.format(minsensi, self.txpow)
 
         # transmission range, needs update XXX    
         self.transRange = 150  
@@ -625,11 +599,8 @@ class myPacket():
         self.symTime = (2.0**self.sf)/self.bw
         self.arriveTime = 0
         self.rssi = Prx 
-        # frequencies: lower bound + number of 61 Hz steps
-       
 
-        # for certain experiments override these and
-        # choose some random frequences
+
 
         self.rectime = airtime(self.sf,self.cr,self.pl,self.bw)
         # denote if packet is collided
@@ -637,11 +608,22 @@ class myPacket():
         self.processed = 0
         # mark the packet as lost when it's rssi is below the sensitivity
         # don't do this for experiment 3, as it requires a bit more work
-        if experiment != 3:
-            #global minsensi
-            self.lost = self.rssi < minsensi
-            #print ("node {} bs {} lost {}".format(self.nodeid, self.bs, self.lost))
+        #global minsensi
+        self.lost = self.rssi < minsensi
+            #print "node {} bs {} lost {}".format(self.nodeid, self.bs, self.lost)
 
+        if self.sf == 7:
+            sf7count += 1
+        if self.sf == 8:
+            sf8count += 1
+        if self.sf == 9:
+            sf9count += 1
+        if self.sf == 10:
+            sf10count += 1
+        if self.sf == 11:
+            sf11count += 1
+        if self.sf == 12:
+            sf12count += 1
 
 #
 # main discrete event loop, runs for each node
@@ -665,7 +647,7 @@ def transmit(env,node):
         global nrBS
         for bs in range(0, nrBS):
            if (node in packetsAtBS[bs]):
-                print ("ERROR: packet already in")
+                 print ("ERROR: packet already in")
            else:
                 # adding packet if no collision
                 if (checkcollision(node.packet[bs])==1):
@@ -723,7 +705,6 @@ def transmit(env,node):
 if len(sys.argv) == 10:
     nrNodes = int(sys.argv[1])                       
     avgSendTime = int(sys.argv[2])
-    L = avgSendTime
     experiment = int(sys.argv[3])
     simtime = int(sys.argv[4])
     nrBS = int(sys.argv[5])
@@ -732,18 +713,19 @@ if len(sys.argv) == 10:
     directionality = int(sys.argv[7])
     nrNetworks = int(sys.argv[8])
     baseDist = float(sys.argv[9])
-    print ("Nodes per base station:", nrNodes )
-    print ("AvgSendTime (exp. distributed):",avgSendTime)
-    print ("Experiment: ", experiment)
-    print ("Simtime: ", simtime)
-    print ("nrBS: ", nrBS)
-    print ("Full Collision: ", full_collision)
-    print ("with directionality: ", directionality)
-    print ("nrNetworks: ", nrNetworks)
-    print ("baseDist: ", baseDist)   # x-distance between the two base stations)
+    # print "Nodes per base station:", nrNodes
+    # print "AvgSendTime (exp. distributed):",avgSendTime
+    # print "Experiment: ", experiment
+    # print "Simtime: ", simtime
+    # print "nrBS: ", nrBS
+    # print "Full Collision: ", full_collision
+    # print "with directionality: ", directionality
+    # print "nrNetworks: ", nrNetworks
+    # print "baseDist: ", baseDist   # x-distance between the two base stations
+
 else:
-    print ("usage: ./directionalLoraIntf.py <nodes> <avgsend> <experiment> <simtime> <collision> <directionality> <networks> <basedist>")
-    print ("experiment 0 and 1 use 1 frequency only")
+    # print "usage: ./directionalLoraIntf.py <nodes> <avgsend> <experiment> <simtime> <collision> <directionality> <networks> <basedist>"
+    # print "experiment 0 and 1 use 1 frequency only"
     exit(-1)
 
 
@@ -752,12 +734,7 @@ nodes = []
 packetsAtBS = []
 env = simpy.Environment()
 
-#cria matriz utilizacao
-m_uti = np.zeros((6,8), dtype=np.float64)
-
-
-data = pd.read_csv("1000nodes.csv")
-
+data = pd.read_csv("2000nodes.csv")
 # max distance: 300m in city, 3000 m outside (5 km Utz experiment)
 # also more unit-disc like according to Utz
 nrCollisions = 0
@@ -771,6 +748,13 @@ packetSeq = 0
 recPackets=[]
 collidedPackets=[]
 lostPackets = []
+
+sf7count = 0
+sf8count = 0
+sf9count = 0
+sf10count = 0
+sf11count = 0
+sf12count = 0
 
 Ptx = 14
 gamma = 2.08
@@ -787,13 +771,13 @@ if experiment in [0,1,4]:
     minsensi = sensi[5,2]  # 5th row is SF12, 2nd column is BW125
 elif experiment == 2:
     minsensi = -112.0   # no experiments, so value from datasheet
-elif experiment == 3:
+elif experiment == 3 or experiment == 5:
     minsensi = np.amin(sensi) ## Experiment 3 can use any setting, so take minimum
 
 Lpl = Ptx - minsensi
-print ("amin", minsensi, "Lpl", Lpl)
+# print "amin", minsensi, "Lpl", Lpl
 maxDist = 0
-print ("maxDist:", maxDist)
+# print "maxDist:", maxDist
 
 # size of area
 xmax = maxDist*(nrBS+2) + 20
@@ -803,9 +787,9 @@ ymax = maxDist*(nrBS+1) + 20
 maxBSReceives = 8
 
 maxX = maxDist + baseDist*(nrBS) 
-print ("maxX ", maxX)
+# print "maxX ", maxX
 maxY = 0
-print ("maxY", maxY)
+# print "maxY", maxY
 
 # prepare graphics and add sink
 if (graphics == 1):
@@ -858,17 +842,17 @@ with open('basestation.txt', 'w') as bfile:
 # start simulation
 env.run(until=simtime)
 
-# print (stats and save into file)
-print ("nr received packets (independent of right base station)", len(recPackets))
-print ("nr collided packets", len(collidedPackets))
-print ("nr lost packets (not correct)", len(lostPackets))
+# print stats and save into file
+# print "nr received packets (independent of right base station)", len(recPackets)
+# print "nr collided packets", len(collidedPackets)
+# print "nr lost packets (not correct)", len(lostPackets)
 
 sum = 0
 for i in range(0,nrBS):
-    print ("packets at BS",i, ":", len(packetsRecBS[i]))
+    # print "packets at BS",i, ":", len(packetsRecBS[i])
     sum = sum + len(packetsRecBS[i])
-print ("sent packets: ", packetSeq)
-print ("overall received at right BS: ", sum)
+# print "sent packets: ", packetSeq
+# print "overall received at right BS: ", sum
 
 sumSent = 0
 sent = []
@@ -876,15 +860,24 @@ for i in range(0, nrBS):
     sent.append(0)
 for i in range(0,nrNodes*nrBS):
     sumSent = sumSent + nodes[i].sent
-    #print ("id for node ", nodes[i].id, "BS:", nodes[i].bs.id, " sent: ", nodes[i].sent)
+    # print "id for node ", nodes[i].id, "BS:", nodes[i].bs.id, " sent: ", nodes[i].sent
     sent[nodes[i].bs.id] = sent[nodes[i].bs.id] + nodes[i].sent
-#for i in range(0, nrBS):
-    #print ("send to BS[",i,"]:", sent[i])
+for i in range(0, nrBS):
+     print ("send to BS[",i,"]:", sent[i])
 
-print ("sumSent: ", sumSent)
+# print "sumSent: ", sumSent
 
-# compute energy
-# Transmit consumption in mA from -2 to +17 dBm
+der = []
+# data extraction rate
+derALL = len(recPackets)/float(sumSent)
+sumder = 0
+for i in range(0, nrBS):
+    der.append(len(packetsRecBS[i])/float(sent[i]))
+    # print "DER BS[",i,"]:", der[i]
+    sumder = sumder + der[i]
+avgDER = (sumder)/nrBS
+# print "avg DER: ", avgDER
+
 TX = [22, 22, 22, 23,                                      # RFO/PA0: -2..1
       24, 24, 24, 25, 25, 25, 25, 26, 31, 32, 34, 35, 44,  # PA_BOOST/PA1: 2..14
       82, 85, 90,                                          # PA_BOOST/PA1: 15..17
@@ -894,49 +887,32 @@ V = 3.0     # voltage XXX
 #sent = sum(n.sent for n in nodes)
 energy = 0.0
 rectim = 0
+time = []
 for i in range(0, nrNodes):
     for n in range(0, len(nodes[i].packet)):
         rectim = rectim + nodes[i].packet[n].rectime
     rectim = rectim/len(nodes[i].packet)
+    time.append(rectim)
     energy = (energy + rectim * mA * V * nodes[i].sent)/1000.0
+print('time:', len(time))
 
-print(rectim)
-
-# energy = sum(sum(node.packet[n].rectime for n in range(0, len(node.packet)))/len(node.packet) * mA * V * node.sent for node in nodes) / 1e6
-#
-
-der = []
-# data extraction rate
-derALL = len(recPackets)/float(sumSent)
-sumder = 0
-for i in range(0, nrBS):
-    der.append(len(packetsRecBS[i])/float(sent[i]))
-    print ("DER BS[",i,"]:", der[i])
-    sumder = sumder + der[i]
-avgDER = (sumder)/nrBS
-#print ("derALL: ", derALL)
-#print ("avg DER: ", avgDER)
-#print ("der[0] ", der[0])
-#print ("nrCollisions ", nrCollisions)
-#print ("str(nrCollisions)", str(nrCollisions))
-#print ("len(recPackets)", len(recPackets))
-#print ("(sumder)", (sumder))
-
-
-# print m_uti
+delay = np.mean(time)
+std_delay = np.std(time)
 
 # this can be done to keep graphics visible
 # if (graphics == 1):
 #     raw_input('Press Enter to continue ...')
 
 # save experiment data into a dat file that can be read by e.g. gnuplot
-# name of file would be:  exp0.dat for experiment 0
-fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "teste.dat"
+# name of file would be:  exp0.dat for experiment 0/
+#fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "IntfAAAA.dat"
+fname = "exp" + str(experiment) + "_minairtime_5min.dat"
 print (fname)
 if os.path.isfile(fname):
-    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(rectim)
+    res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)
 else:
-    res = "Nodes      DER0                  Collisions          OverallEnergy\n" + str(nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy) + " " + str(rectim)
+    res = "Nodes            DER0                         Collisions  OverallEnergy             Delay           STD_delay   SF7   SF8  SF9  SF10  SF11  SF12\n" +  str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)
 with open(fname, "a") as myfile:
     myfile.write(res)
 myfile.close()
+
