@@ -540,8 +540,8 @@ class myPacket():
             minX = 0
             minY = 0
             for sfs in range(0, 6):
-                print('ATUAL', int(sfatual))
-                if (self.nodeid >= int(sfatual)) and (self.nodeid < Quantsf[sfs] + int(sfatual)):
+                if (self.nodeid >= int(sfatual)) and (self.nodeid < int(Quantsf[sfs]) + int(sfatual)):
+                    print(int(Quantsf[sfs]) + int(sfatual))
                     print(nodeid, int(sfatual))
                     self.sf = 7 + sfs
                     minX = sfs
@@ -607,6 +607,44 @@ class myPacket():
                                 self.freq = CF7
                                 minY = 6
                                 break
+                elif (self.nodeid >= int(Quantsf[0]) + int(Quantsf[1]) + int(Quantsf[2]) + int(Quantsf[3]) + int(Quantsf[4]) + int(Quantsf[5])) and (self.nodeid < nrNodes):
+                    if self.nodeid == int(Quantsf[sfs]) + int(sfatual):
+                        self.sf = 8
+                        self.freq = CF8
+                        minX = 1
+                        minY = 7
+                        break
+                    elif self.nodeid == int(Quantsf[sfs]) + int(sfatual) + 1:
+                        self.sf = 11
+                        self.freq = CF8
+                        minX = 4
+                        minY = 7
+                        break
+                    elif self.nodeid == int(Quantsf[sfs]) + int(sfatual) + 2:
+                        self.sf = 12
+                        self.freq = CF8
+                        minX = 5
+                        minY = 7
+                        break
+                    elif self.nodeid == int(Quantsf[sfs]) + int(sfatual) + 3:
+                        self.sf = 9
+                        self.freq = CF8
+                        minX = 2
+                        minY = 7
+                        break
+                    elif self.nodeid == int(Quantsf[sfs]) + int(sfatual) + 4:
+                        self.sf = 10
+                        self.freq = CF8
+                        minX = 3
+                        minY = 7
+                        break
+                    elif self.nodeid == int(Quantsf[sfs]) + int(sfatual) + 5:
+                        self.sf = 7
+                        self.freq = CF8
+                        minX = 0
+                        minY = 7
+                        break
+
                 sfatual += int(Quantsf[sfs])
 
             m_uti[minX, minY] = m_uti[minX, minY] + 1  # Matrix
@@ -964,12 +1002,12 @@ env.run(until=simtime)
 # print "nr collided packets", len(collidedPackets)
 # print "nr lost packets (not correct)", len(lostPackets)
 
-sum = 0
+sumer = 0
 for i in range(0, nrBS):
     # print "packets at BS",i, ":", len(packetsRecBS[i])
-    sum = sum + len(packetsRecBS[i])
+    sumer = sumer + len(packetsRecBS[i])
 # print "sent packets: ", packetSeq
-# print "overall received at right BS: ", sum
+# print "overall received at right BS: ", sumer
 
 sumSent = 0
 sent = []
