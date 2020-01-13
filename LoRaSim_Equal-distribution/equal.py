@@ -888,7 +888,7 @@ env = simpy.Environment()
 #cria matriz utilizacao
 m_uti = np.zeros((6,8), dtype=np.float64)
 
-data = pd.read_csv("3000nodes.csv")
+data = pd.read_csv("250nodes.csv")
 
 # max distance: 300m in city, 3000 m outside (5 km Utz experiment)
 # also more unit-disc like according to Utz
@@ -1059,7 +1059,7 @@ std_delay = np.std(time)
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0
 # fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "EqDistr.dat"
-fname = "exp" + str(experiment) + "_Equaldistr_5min.dat"
+fname = "exp" + str(experiment) + "_Equaldistr_16min.dat"
 print(fname)
 if os.path.isfile(fname):
     res = "\n" + str(nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy) + " " + str(
