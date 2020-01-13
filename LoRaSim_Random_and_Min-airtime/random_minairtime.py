@@ -734,7 +734,7 @@ nodes = []
 packetsAtBS = []
 env = simpy.Environment()
 
-data = pd.read_csv("2000nodes.csv")
+data = pd.read_csv("100nodes.csv")
 # max distance: 300m in city, 3000 m outside (5 km Utz experiment)
 # also more unit-disc like according to Utz
 nrCollisions = 0
@@ -906,7 +906,7 @@ std_delay = np.std(time)
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0/
 #fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "IntfAAAA.dat"
-fname = "exp" + str(experiment) + "_minairtime_5min.dat"
+fname = "exp" + str(experiment) + "_ADR_16min.dat"
 print (fname)
 if os.path.isfile(fname):
     res = "\n" + str(nrNodes) + " " + str(avgDER) +  " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(sf11count) + " " + str(sf12count)

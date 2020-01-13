@@ -26,161 +26,119 @@ class MathTextSciFormatter(mticker.Formatter):
         return "${}$".format(s)
 
 
-df0 = pd.read_csv('exp0_Nagib_16min.dat',
+df0 = pd.read_csv('exp0_Nagib_5min.dat',
                  sep="\s+",
-                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy'],
+                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
-df0.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy']
+df0.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df0)
 
-df1 = pd.read_csv('exp1_Random_16min.dat',
+df1 = pd.read_csv('exp1_Random_5min.dat',
                  sep="\s+",
-                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy'],
+                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
-df1.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy']
+df1.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df1)
 
-df2 = pd.read_csv('exp2_minairtime_16min.dat',
+df2 = pd.read_csv('exp2_minairtime_5min.dat',
                  sep="\s+",
-                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy'],
+                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
-df2.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy']
+df2.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df2)
 
-df3 = pd.read_csv('exp4_Equaldistr_16min.dat',
+df3 = pd.read_csv('exp4_Equaldistr_5min.dat',
                  sep="\s+",
-                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy'],
+                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
-df3.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy']
+df3.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df3)
 
-df4 = pd.read_csv('exp3_ADR_16min.dat',
+df4 = pd.read_csv('exp3_ADR_5min.dat',
                  sep="\s+",
-                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy'],
+                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
-df4.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy']
+df4.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df4)
+df5 = pd.read_csv('exp6_Heuristic_5min.dat',
+                 sep="\s+",
+                 names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
+                 header=0)
+df5.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
+print(df5)
 
-# df0 = pd.read_csv('exp0_Nagib_16min.dat',
-#                  sep="\s+",
-#                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay', 'STD_delay'],
-#                  header=0)
-# df0.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay', 'STD_delay']
-# print(df0)
-#
-# df1 = pd.read_csv('exp1_Random_16min.dat',
-#                  sep="\s+",
-#                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay', 'STD_delay'],
-#                  header=0)
-# df1.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay', 'STD_delay']
-# print(df1)
-#
-# df2 = pd.read_csv('exp2_minairtime_16min.dat',
-#                  sep="\s+",
-#                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay', 'STD_delay'],
-#                  header=0)
-# df2.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay', 'STD_delay']
-# print(df2)
-#
-# df3 = pd.read_csv('exp4_Equaldistr_16min.dat',
-#                  sep="\s+",
-#                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay', 'STD_delay'],
-#                  header=0)
-# df3.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay', 'STD_delay']
-# print(df3)
-#
-# df4 = pd.read_csv('exp3_ADR_16min.dat',
-#                  sep="\s+",
-#                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay', 'STD_delay'],
-#                  header=0)
-# df4.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay', 'STD_delay']
-# print(df4)
 node_numbers = df1['Nodes'].tolist()
 der0 = df0['DER'].tolist()
 der1 = df1['DER'].tolist()
 der2 = df2['DER'].tolist()
 der3 = df3['DER'].tolist()
 der4 = df4['DER'].tolist()
-index0 = []
-for i in range(1, 8):
-    somatorio1 = 0
-    somatorio2 = 0
-    for x in range(0, i):
-        somatorio1 += der0[x]
-    for x in range(0, i):
-        somatorio2 += der0[x] * der0[x]
-    index0.append(pow(somatorio1, 2)/(i*somatorio2))
-print(index0)
-index1 = []
-for i in range(1, 8):
-    somatorio1 = 0
-    somatorio2 = 0
-    for x in range(0, i):
-        somatorio1 += der1[x]
-    for x in range(0, i):
-        somatorio2 += der1[x] * der1[x]
-    index1.append(pow(somatorio1, 2)/(i*somatorio2))
-print(index1)
-index2 = []
-for i in range(1, 8):
-    somatorio1 = 0
-    somatorio2 = 0
-    for x in range(0, i):
-        somatorio1 += der2[x]
-    for x in range(0, i):
-        somatorio2 += der2[x] * der2[x]
-    index2.append(pow(somatorio1, 2)/(i*somatorio2))
-print(index2)
-index3 = []
-for i in range(1, 8):
-    somatorio1 = 0
-    somatorio2 = 0
-    for x in range(0, i):
-        somatorio1 += der3[x]
-    for x in range(0, i):
-        somatorio2 += der3[x] * der3[x]
-    index3.append(pow(somatorio1, 2)/(i*somatorio2))
-print(index3)
-index4 = []
-for i in range(1, 8):
-    somatorio1 = 0
-    somatorio2 = 0
-    for x in range(0, i):
-        somatorio1 += der4[x]
-    for x in range(0, i):
-        somatorio2 += der4[x] * der4[x]
-    index4.append(pow(somatorio1, 2)/(i*somatorio2))
-print(index4)
-fig0 = plt.figure(figsize=(17, 10))
-plt.plot(node_numbers, index0, label='MARCO', linestyle='--', marker='o')
-plt.plot(node_numbers, index1, label='Aleatório', linestyle='--', marker='^')
-plt.plot(node_numbers, index2, label='Menor_Tempo', linestyle='--', marker='h')
-plt.plot(node_numbers, index3, label='Distro_Justo', linestyle='--', marker="D")
-plt.plot(node_numbers, index4, label='ADR', linestyle='--', marker="d")
+der5 = df5['DER'].tolist()
+import scipy.stats
+from pylab import *
 
-#pdf = matplotlib.backends.backend_pdf.PdfPages('DER-Comparation.pdf')
-#plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 19)
-#plt.xticks([100, 250, 500, 750, 1000, 2000, 3000], fontsize = 19)
-plt.ylabel("Indice", fontsize=26)
-plt.xlabel("Número de Dispositivos", fontsize=26)
-#plt.legend(prop=dict(size=12))
-plt.legend(bbox_to_anchor=(0., 1.01, 1., .202), loc=3,
-           ncol=6, mode="expand", borderaxespad=0.,fontsize = 25,markerscale=2,handletextpad=0.1)
-plt.xlim(0)
-plt.grid()
-plt.savefig('INDICES-Comparation.pdf')
+def NewVetorTime(Vetor, Tempo):
+    NewVector = [Vetor["SF7"].max() * Tempo[0], Vetor["SF8"].max() * Tempo[1], Vetor["SF9"].max() * Tempo[2], Vetor["SF10"].max() * Tempo[3], Vetor["SF11"].max() * Tempo[4], Vetor["SF12"].max() * Tempo[5]]
+    return NewVector
+
+
+def jfi(vetor):
+    sum0 = 0
+    sum1 = 0
+    for i in range(0, 5):
+        sum0 += vetor[i]
+        sum1 += pow(vetor[i], 2)
+    return pow(sum0, 2) / (6 * sum1)
+
+
+AirTime = [56.57600000000001, 102.912, 185.344, 370.688, 741.376, 1318.912]
+
+nagib = NewVetorTime(df1, AirTime)
+rand = NewVetorTime(df2, AirTime)
+minAir = NewVetorTime(df3, AirTime)
+adr = NewVetorTime(df4, AirTime)
+igual = NewVetorTime(df5, AirTime)
+
+JFI = [0, 0, 0, 0, 0]
+JFI[0] = jfi(nagib)
+JFI[1] = jfi(rand)
+JFI[2] = jfi(minAir)
+JFI[3] = jfi(adr)
+JFI[4] = jfi(igual)
+print(JFI)
+
+# fig0 = plt.figure(figsize=(17, 10))
+# plt.plot(node_numbers, index0, label='MARCO', linestyle='--', marker='o')
+# plt.plot(node_numbers, index1, label='Aleatório', linestyle='--', marker='^')
+# plt.plot(node_numbers, index2, label='Menor_Tempo', linestyle='--', marker='h')
+# plt.plot(node_numbers, index3, label='Distro_Justo', linestyle='--', marker="D")
+# plt.plot(node_numbers, index4, label='ADR', linestyle='--', marker="d")
+#
+# #pdf = matplotlib.backends.backend_pdf.PdfPages('DER-Comparation.pdf')
+# #plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 19)
+# #plt.xticks([100, 250, 500, 750, 1000, 2000, 3000], fontsize = 19)
+# plt.ylabel("Indice", fontsize=26)
+# plt.xlabel("Número de Dispositivos", fontsize=26)
+# #plt.legend(prop=dict(size=12))
+# plt.legend(bbox_to_anchor=(0., 1.01, 1., .202), loc=3,
+#            ncol=6, mode="expand", borderaxespad=0.,fontsize = 25,markerscale=2,handletextpad=0.1)
+# plt.xlim(0)
+# plt.grid()
+# plt.savefig('INDICES-Comparation.pdf')
 
 collision0 = df0['Collision'].tolist()
 collision1 = df1['Collision'].tolist()
 collision2 = df2['Collision'].tolist()
 collision3 = df3['Collision'].tolist()
 collision4 = df4['Collision'].tolist()
+collision5 = df5['Collision'].tolist()
 
 energy0 = df0['OverallEnergy'].tolist()
 energy1 = df1['OverallEnergy'].tolist()
 energy2 = df2['OverallEnergy'].tolist()
 energy3 = df3['OverallEnergy'].tolist()
 energy4 = df4['OverallEnergy'].tolist()
+energy5 = df5['OverallEnergy'].tolist()
 
 fig1 = plt.figure(figsize=(17, 10))
 plt.plot(node_numbers, der0, label='MARCO', linestyle='--', marker='o')
@@ -188,6 +146,7 @@ plt.plot(node_numbers, der1, label='Aleatório', linestyle='--', marker='^')
 plt.plot(node_numbers, der2, label='Menor_Tempo', linestyle='--', marker='h')
 plt.plot(node_numbers, der3, label='Distro_Justo', linestyle='--', marker="D")
 plt.plot(node_numbers, der4, label='ADR', linestyle='--', marker="d")
+plt.plot(node_numbers, der5, label='Heuristica', linestyle='--', marker="P", color='yellow')
 
 #pdf = matplotlib.backends.backend_pdf.PdfPages('DER-Comparation.pdf')
 plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 24)
@@ -196,11 +155,11 @@ plt.ylabel("DER", fontsize=26)
 plt.xlabel("Número de Dispositivos", fontsize=26)
 #plt.legend(prop=dict(size=12))
 plt.legend(bbox_to_anchor=(0., 1.01, 1., .202), loc=3,
-           ncol=6, mode="expand", borderaxespad=0.,fontsize = 25,markerscale=2,handletextpad=0.1)
+           ncol=6, mode="expand", borderaxespad=0., fontsize=25, markerscale=2, handletextpad=0.1)
 plt.ylim((0.3, 1.02))
 plt.xlim(0)
 plt.grid()
-plt.savefig('DER-Comparation.pdf')
+plt.savefig('DER-Comparation')
 
 #plt.show()
 #pdf.savefig(fig1)
@@ -212,6 +171,7 @@ plt.plot(node_numbers, collision1, label='Aleatório', linestyle='--', marker='^
 plt.plot(node_numbers, collision2, label='Menor_Tempo', linestyle='--', marker='h')
 plt.plot(node_numbers, collision3, label='Distro_Justo', linestyle='--', marker="D")
 plt.plot(node_numbers, collision4, label='ADR', linestyle='--', marker="d")
+plt.plot(node_numbers, collision5, label='Heuristica', linestyle='--', marker="P", color='yellow')
 
 #pdf = matplotlib.backends.backend_pdf.PdfPages('Collisions-Comparation.pdf')
 plt.ylabel("Número de Colisões", fontsize=24)
@@ -225,7 +185,7 @@ plt.gca().yaxis.set_major_formatter(MathTextSciFormatter("%1.2e"))
 plt.yticks(fontsize = 24)
 plt.grid()
 plt.xlim(0)
-plt.savefig('Collisions-Comparation.pdf')
+plt.savefig('Collisions-Comparation')
 #plt.show()
 #pdf.savefig(fig2)
 #pdf.close()
@@ -236,13 +196,14 @@ plt.plot(node_numbers, energy1, label='Aleatório', linestyle='--', marker='^')
 plt.plot(node_numbers, energy2, label='Menor_Tempo', linestyle='--', marker='h')
 plt.plot(node_numbers, energy3, label='Distro_Justo', linestyle='--', marker="D")
 plt.plot(node_numbers, energy4, label='ADR', linestyle='--', marker="d")
+plt.plot(node_numbers, energy5, label='Heuristica', linestyle='--', marker="P", color='yellow')
 
-pdf = matplotlib.backends.backend_pdf.PdfPages('Energy-Comparation.pdf')
+#pdf = matplotlib.backends.backend_pdf.PdfPages('Energy-Comparation.pdf')
 plt.ylabel("Consumo de Energia da Rede(mJ)", fontsize=26)
 plt.xlabel("Número de Dispositivos", fontsize=26)
-#plt.legend(prop=dict(size=12))
+plt.legend(prop=dict(size=12))
 plt.legend(bbox_to_anchor=(0., 1.01, 1., .202), loc=3,
-           ncol=6, mode="expand", borderaxespad=0.,fontsize = 25,markerscale=2,handletextpad=0.1)
+           ncol=6, mode="expand", borderaxespad=0., fontsize=25, markerscale=2, handletextpad=0.1)
 plt.xticks(fontsize = 20)
 plt.gcf().subplots_adjust(left=0.15)
 plt.gca().yaxis.set_major_formatter(MathTextSciFormatter("%1.2e"))
@@ -250,45 +211,46 @@ plt.yticks(fontsize = 20)
 plt.xlim(0)
 plt.grid()
 #plt.show()
-pdf.savefig(fig3)
-pdf.close()
+plt.savefig('Energy-Comparation')
 
-# delay0 = df0['Delay'].tolist()
-# delay1 = df1['Delay'].tolist()
-# delay2 = df2['Delay'].tolist()
-# delay3 = df3['Delay'].tolist()
-# delay4 = df4['Delay'].tolist()
-# stddelay0 = df0['STD_delay'].tolist()
-# stddelay1 = df1['STD_delay'].tolist()
-# stddelay2 = df2['STD_delay'].tolist()
-# stddelay3 = df3['STD_delay'].tolist()
-# stddelay4 = df4['STD_delay'].tolist()
-#
-# fig4 = plt.figure(figsize=(17, 10))
-# #fig4 = plt.figure(figsize=(15, 10))
-# plt.plot(node_numbers, delay0, label='MARCO', linestyle='--', marker='o')
-# #plt.errorbar(node_numbers, delay0, stddelay0, linestyle='None', color='blue')
-# plt.plot(node_numbers, delay1, label='Aleatório', linestyle='--', marker='^')
-# #plt.errorbar(node_numbers, delay1, stddelay1, linestyle='None', color='green')
-# plt.plot(node_numbers, delay2, label='Menor_Tempo', linestyle='--', marker='h')
-# #plt.errorbar(node_numbers, delay2, stddelay2, linestyle='None', color='red')
-# plt.plot(node_numbers, delay3, label='Distro_Justo', linestyle='--', marker="D")
-# #plt.errorbar(node_numbers, delay3, stddelay3, linestyle='None', color='purple')
-# plt.plot(node_numbers, delay4, label='ADR', linestyle='--', marker="d")
-# #plt.errorbar(node_numbers, delay4, stddelay4, linestyle='None', color='brown')
-#
-# #plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 19)
-# #plt.xticks([100, 250, 500, 750, 1000, 2000, 3000], fontsize = 19)
-# plt.yticks(fontsize = 22)
-# plt.xticks(fontsize = 22)
-# plt.ylabel("ToA(s)", fontsize=24)
-# plt.xlabel("Número de Dispositivos", fontsize=26)
-# #plt.legend(prop=dict(size=12))
-# plt.legend(bbox_to_anchor=(0., 1.01, 1., .202), loc=3,
-#            ncol=6, mode="expand", borderaxespad=0.,fontsize = 25,markerscale=2,handletextpad=0.1)
-# plt.xlim(0)
-# plt.grid()
-# plt.savefig('ToA-Comparation.pdf')
+delay0 = df0['Delay'].tolist()
+delay1 = df1['Delay'].tolist()
+delay2 = df2['Delay'].tolist()
+delay3 = df3['Delay'].tolist()
+delay4 = df4['Delay'].tolist()
+delay5 = df5['Delay'].tolist()
+stddelay0 = df0['STD_delay'].tolist()
+stddelay1 = df1['STD_delay'].tolist()
+stddelay2 = df2['STD_delay'].tolist()
+stddelay3 = df3['STD_delay'].tolist()
+stddelay4 = df4['STD_delay'].tolist()
+
+fig4 = plt.figure(figsize=(17, 10))
+#fig4 = plt.figure(figsize=(15, 10))
+plt.plot(node_numbers, delay0, label='MARCO', linestyle='--', marker='o')
+#plt.errorbar(node_numbers, delay0, stddelay0, linestyle='None', color='blue')
+plt.plot(node_numbers, delay1, label='Aleatório', linestyle='--', marker='^')
+#plt.errorbar(node_numbers, delay1, stddelay1, linestyle='None', color='green')
+plt.plot(node_numbers, delay2, label='Menor_Tempo', linestyle='--', marker='h')
+#plt.errorbar(node_numbers, delay2, stddelay2, linestyle='None', color='red')
+plt.plot(node_numbers, delay3, label='Distro_Justo', linestyle='--', marker="D")
+#plt.errorbar(node_numbers, delay3, stddelay3, linestyle='None', color='purple')
+plt.plot(node_numbers, delay4, label='ADR', linestyle='--', marker="d")
+#plt.errorbar(node_numbers, delay4, stddelay4, linestyle='None', color='brown')
+plt.plot(node_numbers, delay5, label='Heuristica', linestyle='--', marker="P", color='yellow')
+
+#plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 19)
+#plt.xticks([100, 250, 500, 750, 1000, 2000, 3000], fontsize = 19)
+plt.yticks(fontsize = 22)
+plt.xticks(fontsize = 22)
+plt.ylabel("ToA(s)", fontsize=24)
+plt.xlabel("Número de Dispositivos", fontsize=26)
+#plt.legend(prop=dict(size=12))
+plt.legend(bbox_to_anchor=(0., 1.01, 1., .202), loc=3,
+           ncol=6, mode="expand", borderaxespad=0.,fontsize=25,markerscale=2,handletextpad=0.1)
+plt.xlim(0)
+plt.grid()
+plt.savefig('ToA-Comparation')
 
 
 
