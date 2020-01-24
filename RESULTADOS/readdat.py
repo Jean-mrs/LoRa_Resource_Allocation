@@ -25,41 +25,41 @@ class MathTextSciFormatter(mticker.Formatter):
         return "${}$".format(s)
 
 
-df0 = pd.read_csv('exp0_Nagib_16min.dat',
+df0 = pd.read_csv('exp0_Nagib_5min.dat',
                  sep="\s+",
                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
 df0.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df0)
 
-df1 = pd.read_csv('exp1_Random_16min.dat',
+df1 = pd.read_csv('exp1_Random_5min.dat',
                  sep="\s+",
                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
 df1.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df1)
 
-df2 = pd.read_csv('exp2_minairtime_16min.dat',
+df2 = pd.read_csv('exp2_minairtime_5min.dat',
                  sep="\s+",
                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
 df2.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df2)
 
-df3 = pd.read_csv('exp4_Equaldistr_16min.dat',
+df3 = pd.read_csv('exp4_Equaldistr_5min.dat',
                  sep="\s+",
                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
 df3.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df3)
 
-df4 = pd.read_csv('exp3_ADR_16min.dat',
+df4 = pd.read_csv('exp3_ADR_5min.dat',
                  sep="\s+",
                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
 df4.columns = ['Nodes', 'DER', 'Collision', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12']
 print(df4)
-df5 = pd.read_csv('exp6_Heuristic_16min.dat',
+df5 = pd.read_csv('exp6_Heuristic_5min.dat',
                  sep="\s+",
                  names=['Nodes', 'DER0', 'Collisions', 'OverallEnergy', 'Delay','STD_delay', 'SF7',   'SF8',  'SF9',  'SF10',  'SF11',  'SF12'],
                  header=0)
@@ -108,34 +108,28 @@ JFI4 = [jfi(justice) for justice in adr]
 JFI5 = [jfi(justice) for justice in heuri]
 
 fig0 = plt.figure(figsize=(17, 10))
-plt.plot(node_numbers, JFI5, label='CORRECT', linestyle='--', marker="P")
-plt.plot(node_numbers, JFI0, label='MARCO', linestyle='--', marker="X")
-plt.plot(node_numbers, JFI1, label='Random', linestyle='--', marker='^')
-plt.plot(node_numbers, JFI2, label='Min_Airt', linestyle='--', marker='h')
-plt.plot(node_numbers, JFI3, label='Eq_Distr', linestyle='--', marker="D")
-plt.plot(node_numbers, JFI4, label='ADR', linestyle='--', marker="d")
+plt.plot(node_numbers, JFI5, label='CORRECT', linestyle='--', marker="P", linewidth=2)
+plt.plot(node_numbers, JFI0, label='MARCO', linestyle='--', marker="X", linewidth=2)
+plt.plot(node_numbers, JFI1, label='Random', linestyle='--', marker='^', linewidth=2)
+plt.plot(node_numbers, JFI2, label='Min_Airt', linestyle='--', marker='h', linewidth=2,  markersize=10)
+plt.plot(node_numbers, JFI3, label='Eq_Distr', linestyle='--', marker="D", linewidth=2)
+plt.plot(node_numbers, JFI4, label='ADR', linestyle='--', marker="d", linewidth=2)
 
-plt.yticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize=24)
-plt.xticks([100, 500, 1000, 2000, 3000], fontsize=24)
-#plt.xticks(fontsize=24)
-plt.ylabel("Fairness Index", fontsize=26)
-plt.xlabel("Number of Devices", fontsize=26)
+plt.yticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize=26)
+plt.xticks([100, 500, 1000, 2000, 3000], fontsize=26)
+plt.ylabel("Fairness Index", fontsize=28)
+plt.xlabel("Number of Devices", fontsize=28)
+# plt.yticks([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize=24)
+# plt.xticks([100, 500, 1000, 2000, 3000], fontsize=24)
+# plt.ylabel("Fairness Index", fontsize=26)
+# plt.xlabel("Number of Devices", fontsize=26)
 #plt.legend(prop=dict(size=12))
 plt.legend(bbox_to_anchor=(0., 1.01, 1.006, .202), loc=3,
             ncol=7, mode="expand", borderaxespad=0, fontsize=27, markerscale=2, handletextpad=0.0005)
 # plt.xlim(0)
-#plt.grid()
-plt.minorticks_on()
-plt.grid(which='major', linestyle='-', linewidth='0.5', color='green')
-plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+plt.grid()
 plt.savefig('INDICES-Comparation.pdf')
 
-collision0 = df0['Collision'].tolist()
-collision1 = df1['Collision'].tolist()
-collision2 = df2['Collision'].tolist()
-collision3 = df3['Collision'].tolist()
-collision4 = df4['Collision'].tolist()
-collision5 = df5['Collision'].tolist()
 
 energy0 = df0['OverallEnergy'].tolist()
 energy1 = df1['OverallEnergy'].tolist()
@@ -145,70 +139,85 @@ energy4 = df4['OverallEnergy'].tolist()
 energy5 = df5['OverallEnergy'].tolist()
 
 fig1 = plt.figure(figsize=(17, 10))
-plt.plot(node_numbers, der5, label='CORRECT', linestyle='--', marker="P")
-plt.plot(node_numbers, der0, label='MARCO', linestyle='--', marker="X")
-plt.plot(node_numbers, der1, label='Random', linestyle='--', marker='^')
-plt.plot(node_numbers, der2, label='Min_Airt', linestyle='--', marker='h')
-plt.plot(node_numbers, der3, label='Eq_Distr', linestyle='--', marker="D")
-plt.plot(node_numbers, der4, label='ADR', linestyle='--', marker="d")
+plt.plot(node_numbers, der5, label='CORRECT', linestyle='--', marker="P", linewidth=2)
+plt.plot(node_numbers, der0, label='MARCO', linestyle='--', marker="X", linewidth=2)
+plt.plot(node_numbers, der1, label='Random', linestyle='--', marker='^', linewidth=2)
+plt.plot(node_numbers, der2, label='Min_Airt', linestyle='--', marker='h', linewidth=2)
+plt.plot(node_numbers, der3, label='Eq_Distr', linestyle='--', marker="D", linewidth=2)
+plt.plot(node_numbers, der4, label='ADR', linestyle='--', marker="d", linewidth=2)
 
 
-plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 24)
-plt.xticks(fontsize = 24)
-plt.ylabel("DER (%)", fontsize=26)
-plt.xlabel("Number of Devices", fontsize=26)
+plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 26)
+plt.xticks(fontsize = 26)
+plt.ylabel("DER (%)", fontsize=28)
+plt.xlabel("Number of Devices", fontsize=28)
+# plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 24)
+# plt.xticks(fontsize = 24)
+# plt.ylabel("DER (%)", fontsize=26)
+# plt.xlabel("Number of Devices", fontsize=26)
 #plt.legend(prop=dict(size=12))
-plt.legend(bbox_to_anchor=(0., 1.01, 1.006, .202), loc=3,
+plt.legend(bbox_to_anchor=(0., 1.01, 1.008, .202), loc=3,
             ncol=7, mode="expand", borderaxespad=0, fontsize=27, markerscale=2, handletextpad=0.0005)
 plt.ylim((0.3, 1.02))
 plt.xlim(0)
 plt.grid()
 plt.savefig('DER-Comparation.pdf')
 
-#plt.show()
-#pdf.savefig(fig1)
-#pdf.close()
 
+collision0 = [col/n for col, n in zip(df0['Collision'].tolist(), node_numbers)]
+collision1 = [col/n for col, n in zip(df1['Collision'].tolist(), node_numbers)]
+collision2 = [col/n for col, n in zip(df2['Collision'].tolist(), node_numbers)]
+collision3 = [col/n for col, n in zip(df3['Collision'].tolist(), node_numbers)]
+collision4 = [col/n for col, n in zip(df4['Collision'].tolist(), node_numbers)]
+collision5 = [col/n for col, n in zip(df5['Collision'].tolist(), node_numbers)]
 fig2 = plt.figure(figsize=(17, 10))
-plt.plot(node_numbers, collision5, label='CORRECT', linestyle='--', marker="P")
-plt.plot(node_numbers, collision0, label='MARCO', linestyle='--', marker="X")
-plt.plot(node_numbers, collision1, label='Random', linestyle='--', marker='^')
-plt.plot(node_numbers, collision2, label='Min_Airt', linestyle='--', marker='h')
-plt.plot(node_numbers, collision3, label='Eq_Distr', linestyle='--', marker="D")
-plt.plot(node_numbers, collision4, label='ADR', linestyle='--', marker="d")
+plt.plot(node_numbers, collision5, label='CORRECT', linestyle='--', marker="P", linewidth=2)
+plt.plot(node_numbers, collision0, label='MARCO', linestyle='--', marker="X", linewidth=2)
+plt.plot(node_numbers, collision1, label='Random', linestyle='--', marker='^', linewidth=2)
+plt.plot(node_numbers, collision2, label='Min_Airt', linestyle='--', marker='h', linewidth=2)
+plt.plot(node_numbers, collision3, label='Eq_Distr', linestyle='--', marker="D", linewidth=2)
+plt.plot(node_numbers, collision4, label='ADR', linestyle='--', marker="d", linewidth=2)
 
 
-plt.ylabel("Number of Collisions", fontsize=24)
-plt.xlabel("Number of Devices", fontsize=24)
-#plt.legend(prop=dict(size=12))
-plt.legend(bbox_to_anchor=(0., 1.01, 1.006, .202), loc=3,
+plt.ylabel("Number of Collisions per Node", fontsize=26)
+plt.xlabel("Number of Devices", fontsize=26)
+plt.xticks(fontsize=26)
+plt.yticks(fontsize=26)
+# plt.ylabel("Number of Collisions", fontsize=24)
+# plt.xlabel("Number of Devices", fontsize=24)
+# plt.xticks(fontsize=24)
+# plt.yticks(fontsize=24)
+plt.legend(bbox_to_anchor=(0., 1.01, 1.008, .202), loc=3,
             ncol=7, mode="expand", borderaxespad=0, fontsize=27, markerscale=2, handletextpad=0.0005)
-plt.xticks(fontsize=24)
-plt.gcf().subplots_adjust(left=0.15)
-plt.gca().yaxis.set_major_formatter(MathTextSciFormatter("%1.2e"))
-plt.yticks(fontsize = 24)
+#plt.gcf().subplots_adjust(left=0.15)
+#plt.gca().yaxis.set_major_formatter(MathTextSciFormatter("%1.2e"))
 plt.grid()
 plt.xlim(0)
 plt.savefig('Collisions-Comparation.pdf')
 
 fig3 = plt.figure(figsize=(17, 10))
-plt.plot(node_numbers, energy5, label='CORRECT', linestyle='--', marker="P")
-plt.plot(node_numbers, energy0, label='MARCO', linestyle='--', marker="X")
-plt.plot(node_numbers, energy1, label='Random', linestyle='--', marker='^')
-plt.plot(node_numbers, energy2, label='Min_Airt', linestyle='--', marker='h')
-plt.plot(node_numbers, energy3, label='Eq_Distr', linestyle='--', marker="D")
-plt.plot(node_numbers, energy4, label='ADR', linestyle='--', marker="d")
+plt.plot(node_numbers, energy5, label='CORRECT', linestyle='--', marker="P", linewidth=2)
+plt.plot(node_numbers, energy0, label='MARCO', linestyle='--', marker="X", linewidth=2)
+plt.plot(node_numbers, energy1, label='Random', linestyle='--', marker='^', linewidth=2)
+plt.plot(node_numbers, energy2, label='Min_Airt', linestyle='--', marker='h', linewidth=2)
+plt.plot(node_numbers, energy3, label='Eq_Distr', linestyle='--', marker="D", linewidth=2)
+plt.plot(node_numbers, energy4, label='ADR', linestyle='--', marker="d", linewidth=2)
 
-
-plt.ylabel("Overall Energy (mJ)", fontsize=26)
-plt.xlabel("Number of Devices", fontsize=26)
-plt.legend(prop=dict(size=12))
-plt.legend(bbox_to_anchor=(0., 1.01, 1.006, .202), loc=3,
+plt.ylabel("Overall Energy (mJ)", fontsize=28)
+plt.xlabel("Number of Devices", fontsize=28)
+plt.xticks(fontsize = 22)
+plt.yticks(fontsize = 22)
+# plt.ylabel("Overall Energy (mJ)", fontsize=26)
+# plt.xlabel("Number of Devices", fontsize=26)
+# plt.xticks(fontsize = 20)
+# plt.yticks(fontsize = 20)
+#plt.legend(prop=dict(size=12))
+plt.legend(bbox_to_anchor=(0., 1.01, 1.008, .202), loc=3,
             ncol=7, mode="expand", borderaxespad=0, fontsize=27, markerscale=2, handletextpad=0.0005)
-plt.xticks(fontsize = 20)
+
 plt.gcf().subplots_adjust(left=0.15)
 plt.gca().yaxis.set_major_formatter(MathTextSciFormatter("%1.2e"))
-plt.yticks(fontsize = 20)
+
 plt.xlim(0)
 plt.grid()
 plt.savefig('Energy-Comparation.pdf')
@@ -227,33 +236,34 @@ stddelay4 = df4['STD_delay'].tolist()
 
 fig4 = plt.figure(figsize=(17, 10))
 #fig4 = plt.figure(figsize=(15, 10))
-plt.plot(node_numbers, delay5, label='CORRECT', linestyle='--', marker="P")
-plt.plot(node_numbers, delay0, label='MARCO', linestyle='--', marker="X")
+plt.plot(node_numbers, delay5, label='CORRECT', linestyle='--', marker="P", linewidth=2)
+plt.plot(node_numbers, delay0, label='MARCO', linestyle='--', marker="X", linewidth=2)
 #plt.errorbar(node_numbers, delay0, stddelay0, linestyle='None', color='blue')
-plt.plot(node_numbers, delay1, label='Random', linestyle='--', marker='^')
+plt.plot(node_numbers, delay1, label='Random', linestyle='--', marker='^', linewidth=2)
 #plt.errorbar(node_numbers, delay1, stddelay1, linestyle='None', color='green')
-plt.plot(node_numbers, delay2, label='Min_Airt', linestyle='--', marker='h')
+plt.plot(node_numbers, delay2, label='Min_Airt', linestyle='--', marker='h', linewidth=2)
 #plt.errorbar(node_numbers, delay2, stddelay2, linestyle='None', color='red')
-plt.plot(node_numbers, delay3, label='Eq_Distr', linestyle='--', marker="D")
+plt.plot(node_numbers, delay3, label='Eq_Distr', linestyle='--', marker="D", linewidth=2)
 #plt.errorbar(node_numbers, delay3, stddelay3, linestyle='None', color='purple')
-plt.plot(node_numbers, delay4, label='ADR', linestyle='--', marker="d")
+plt.plot(node_numbers, delay4, label='ADR', linestyle='--', marker="d", linewidth=2)
 #plt.errorbar(node_numbers, delay4, stddelay4, linestyle='None', color='brown')
 
 #plt.yticks([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], fontsize = 19)
 #plt.xticks([100, 250, 500, 750, 1000, 2000, 3000], fontsize = 19)
-plt.yticks(fontsize = 22)
-plt.xticks(fontsize = 22)
-plt.ylabel("Airtime(s)", fontsize=24)
-plt.xlabel("Number of Devices", fontsize=26)
+plt.yticks(fontsize = 24)
+plt.xticks(fontsize = 24)
+plt.ylabel("Airtime(s)", fontsize=26)
+plt.xlabel("Number of Devices", fontsize=28)
+# plt.yticks(fontsize = 22)
+# plt.xticks(fontsize = 22)
+# plt.ylabel("Airtime(s)", fontsize=24)
+# plt.xlabel("Number of Devices", fontsize=26)
 #plt.legend(prop=dict(size=12))
-plt.legend(bbox_to_anchor=(0., 1.01, 1.006, .202), loc=3,
+plt.legend(bbox_to_anchor=(0., 1.01, 1.008, .202), loc=3,
             ncol=7, mode="expand", borderaxespad=0, fontsize=27, markerscale=2, handletextpad=0.0005)
 plt.xlim(0)
 plt.grid()
 plt.savefig('ToA-Comparation.pdf')
-
-
-
 
 # initialise data of lists.
 # data = {'Modelo': ['MARCO', 'Aleatório', 'Menor_Tempo', 'Distro_Justo', 'ADR'],
@@ -266,10 +276,10 @@ plt.savefig('ToA-Comparation.pdf')
 # # Creates pandas DataFrame.
 # df = pd.DataFrame(data)
 # Quantidade de Devices por SF com 3000
-num_set = [{'SF7':1410, 'SF8':775, 'SF9':428, 'SF10':212, 'SF11':106, 'SF12':69},  # MARCO
-           {'SF7':1410, 'SF8':775, 'SF9':428, 'SF10':212, 'SF11':106, 'SF12':69},  # Heuristica
+num_set = [{'SF7':1410, 'SF8':775, 'SF9':428, 'SF10':212, 'SF11':106, 'SF12':69},  # CORRECT
+           {'SF7':1410, 'SF8':774, 'SF9':429, 'SF10':213, 'SF11':106, 'SF12':68},  # MARCO
            {'SF7':400, 'SF8':456, 'SF9':560, 'SF10':586, 'SF11':480, 'SF12':518},  # Random
-           {'SF7':3000, 'SF8':0, 'SF9':0, 'SF10':0, 'SF11':0, 'SF12':0},  # Min_Airtime
+           {'SF7':3000, 'SF8':0, 'SF9':0, 'SF10':0, 'SF11':0, 'SF12':0},           # Min_Airtime
            {'SF7':500, 'SF8':500, 'SF9':500, 'SF10':500, 'SF11':500, 'SF12':500},  # Equal-Distribution
            {'SF7':3000, 'SF8':0, 'SF9':0, 'SF10':0, 'SF11':0, 'SF12':0}  # ADR
            ]
@@ -305,8 +315,10 @@ for name, pattern, color in zip(names, patterns, colors2):
     cont +=1
 
 plt.ylim(0, 3000)
-plt.yticks([300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700,3000], ['10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'], fontsize = 22)
-plt.xticks(bottoms, ['CORRECT', 'MARCO', 'Random', 'Min_Airt', 'Eq_Distr', 'ADR'], fontsize = 24)
+plt.yticks([300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700,3000], ['10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'], fontsize = 24)
+plt.xticks(bottoms, ['CORRECT', 'MARCO', 'Random', 'Min_Airt', 'Eq_Distr', 'ADR'], fontsize = 26)
+# plt.yticks([300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700,3000], ['10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'], fontsize = 22)
+# plt.xticks(bottoms, ['CORRECT', 'MARCO', 'Random', 'Min_Airt', 'Eq_Distr', 'ADR'], fontsize = 24)
 plt.legend(bbox_to_anchor=(0., 1.01, 1.006, .202), loc=3,
             ncol=6, mode="expand", borderaxespad=0, fontsize=27, markerscale=2, handletextpad=0.0005)
 #plt.subplots_adjust(right=0.75)
