@@ -107,7 +107,7 @@ sf10 = np.array([10, -134, -130.25, -128.75])
 sf11 = np.array([11, -136, -132.75, -128.75])
 sf12 = np.array([12, -137, -132.25, -132.25])
 
-
+collisionsvector = np.zeros((4,), dtype=int)
 #
 # check for collisions at base station
 # Note: called before a packet (or rather node) is inserted into the list
@@ -149,12 +149,15 @@ def checkcollision(packet):
 #        |f1-f2| <= 60 kHz if f1 or f2 has bw 250
 #        |f1-f2| <= 30 kHz if f1 or f2 has bw 125
 def frequencyCollision(p1, p2):
-    if (abs(p1.freq - p2.freq) <= 120 and (p1.bw == 500 or p2.freq == 500)):
+    if abs(p1.freq - p2.freq) <= 120 and (p1.bw == 500 or p2.bw == 500):
+        collisionsvector[0] += 1
         return True
-    elif (abs(p1.freq - p2.freq) <= 60 and (p1.bw == 250 or p2.freq == 250)):
+    elif abs(p1.freq - p2.freq) <= 60 and (p1.bw == 250 or p2.bw == 250):
+        collisionsvector[0] += 1
         return True
     else:
-        if (abs(p1.freq - p2.freq) <= 30):
+        if abs(p1.freq - p2.freq) <= 30:
+            collisionsvector[0] += 1
             return True
     return False
 
@@ -162,6 +165,7 @@ def frequencyCollision(p1, p2):
 def sfCollision(p1, p2):
     if p1.sf == p2.sf:
         # p2 may have been lost too, will be marked by other checks
+        collisionsvector[1] += 1
         return True
     return False
 
@@ -171,9 +175,11 @@ def powerCollision(p1, p2):
     if abs(p1.rssi - p2.rssi) < powerThreshold:
         # packets are too close to each other, both collide
         # return both packets as casualties
+        collisionsvector[2] += 1
         return (p1, p2)
     elif p1.rssi - p2.rssi < powerThreshold:
         # p2 overpowered p1, return p1 as casualty
+        collisionsvector[2] += 1
         return (p1,)
     # p2 was the weaker packet, return it as a casualty
     return (p2,)
@@ -195,6 +201,7 @@ def timingCollision(p1, p2):
     p1_cs = env.now + Tpreamb
     if p1_cs < p2_end:
         # p1 collided with p2 and lost
+        collisionsvector[3] += 1
         return True
     return False
 
@@ -888,7 +895,7 @@ env = simpy.Environment()
 #cria matriz utilizacao
 m_uti = np.zeros((6,8), dtype=np.float64)
 
-data = pd.read_csv("250nodes.csv")
+data = pd.read_csv("100nodes.csv")
 
 # max distance: 300m in city, 3000 m outside (5 km Utz experiment)
 # also more unit-disc like according to Utz
@@ -1059,17 +1066,16 @@ std_delay = np.std(time)
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0
 # fname = "exp" + str(experiment) + "d99" + "BS" + str(nrBS) + "EqDistr.dat"
-fname = "exp" + str(experiment) + "_Equaldistr_16min.dat"
+fname = "exp" + str(experiment) + "_heuristic_16min.dat"
 print(fname)
 if os.path.isfile(fname):
     res = "\n" + str(nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy) + " " + str(
         delay) + " " + str(std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(
-        sf10count) + " " + str(sf11count) + " " + str(sf12count)
+        sf10count) + " " + str(sf11count) + " " + str(sf12count)+ " / " + str(collisionsvector[0]) + " " + str(collisionsvector[1]) + " " + str(collisionsvector[2]) + " " + str(collisionsvector[3])
 else:
-    res = "Nodes            DER0                         Collisions  OverallEnergy             Delay           STD_delay   SF7   SF8  SF9  SF10  SF11  SF12\n" + str(
-        nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(
-        std_delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(
-        sf11count) + " " + str(sf12count)
+    res = "Nodes            DER0                         Collisions  OverallEnergy             Delay         SF7   SF8  SF9  SF10  SF11  SF12    FreqColli    SFColli    PowerColli    TimingColli\n" + str(
+        nrNodes) + " " + str(avgDER) + " " + str(nrCollisions) + " " + str(energy) + " " + str(delay) + " " + str(sf7count) + " " + str(sf8count) + " " + str(sf9count) + " " + str(sf10count) + " " + str(
+        sf11count) + " " + str(sf12count) + "  / " + str(collisionsvector[0]) + " " + str(collisionsvector[1]) + " " + str(collisionsvector[2]) + " " + str(collisionsvector[3])
 with open(fname, "a") as myfile:
     myfile.write(res)
 myfile.close()
